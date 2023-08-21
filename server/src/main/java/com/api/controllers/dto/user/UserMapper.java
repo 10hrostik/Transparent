@@ -1,0 +1,39 @@
+package com.api.controllers.dto.user;
+
+import com.api.controllers.dto.residence.CountryMapper;
+import com.api.entities.user.User;
+import com.api.utils.Validator;
+
+import java.sql.Date;
+import java.time.LocalDate;
+
+public class UserMapper {
+    public static ResponseUserDto entityToResponseDto(User user) {
+        ResponseUserDto responseUserDto = new ResponseUserDto();
+        responseUserDto.setId(user.getId());
+        responseUserDto.setEmail(user.getEmail());
+        responseUserDto.setCredential(user.getUsername());
+        responseUserDto.setName(user.getName());
+        responseUserDto.setSurname(user.getSurname());
+        responseUserDto.setPhone(user.getPhone());
+        responseUserDto.setLoginDate(Date.valueOf(user.getLoginDate()));
+        if (user.getCountry() != null) responseUserDto.setCountry(CountryMapper.entityToDto(user.getCountry()));
+
+        return responseUserDto;
+    }
+
+    public static User registerDtoToEntity(RegisterUserDto dto) {
+        User user = new User();
+        user.setPassword(dto.getPassword());
+        user.setPhone(dto.getNumber());
+        user.setRegisterDate(LocalDate.now());
+        user.setLoginDate(LocalDate.now());
+        if (Validator.isEmail(dto.getCredential())) {
+            user.setEmail(dto.getCredential());
+        } else {
+            user.setUsername(dto.getCredential());
+        }
+
+        return user;
+    }
+}

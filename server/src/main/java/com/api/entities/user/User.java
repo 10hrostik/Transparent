@@ -1,0 +1,194 @@
+package com.api.entities.user;
+
+import com.api.entities.residence.Country;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+
+@Table(name = "users")
+public class User implements UserDetails {
+    @Id
+    private Long id;
+
+    @Column(value = "username")
+    private String username;
+
+    @Column(value = "password")
+    private String password;
+
+    @Column(value = "email")
+    private String email;
+
+    @Column(value = "name")
+    private String name;
+
+    @Column(value = "surname")
+    private String surname;
+
+    @Column(value = "phone")
+    private Long phone;
+
+    @Column(value = "register_date")
+    private LocalDate registerDate;
+
+    @Column(value = "login_date")
+    private LocalDate loginDate;
+
+    @Column(value = "account_non_expired")
+    private Boolean accountNonExpired;
+
+    @Column(value = "account_non_locked")
+    private Boolean accountNonLocked;
+
+    @Column(value = "credentials_non_expired")
+    private Boolean credentialsNonExpired;
+
+    @Column(value = "enabled")
+    private Boolean enabled;
+
+    @Column(value = "role")
+    private Role role;
+
+    @Column(value = "country_id")
+    private Integer countryId;
+
+    @Transient
+    private Country country;
+
+    public User () {
+        accountNonExpired = true;
+        accountNonLocked = true;
+        credentialsNonExpired = true;
+        enabled = true;
+        role = Role.ROLE_USER;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public Long getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Long phone) {
+        this.phone = phone;
+    }
+
+    public LocalDate getRegisterDate() {
+        return registerDate;
+    }
+
+    public void setRegisterDate(LocalDate registerDate) {
+        this.registerDate = registerDate;
+    }
+
+    public LocalDate getLoginDate() {
+        return loginDate;
+    }
+
+    public void setLoginDate(LocalDate loginDate) {
+        this.loginDate = loginDate;
+    }
+
+    public Integer getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(Integer countryId) {
+        this.countryId = countryId;
+    }
+
+    public Boolean getAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    public void setAccountNonExpired(Boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+}
