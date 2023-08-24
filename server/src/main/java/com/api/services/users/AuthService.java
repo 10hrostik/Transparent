@@ -28,27 +28,25 @@ public class AuthService extends GeneralUserService implements ReactiveUserDetai
             user = getUserByPhone((Long) credential);
             user.flatMap(this::updateLoginDate).subscribe();
 
-            return user.flatMap(x -> countryRepository.findById(x.getCountryId())
-                            .map(y -> {
-                                x.setCountry(y);
-                                return x;
-                            })
-                    )
-                    .map(UserMapper::entityToResponseDto);
+            return convertLoginResponse(user);
         } else if (credential instanceof String) {
             password = passwordEncoder.encode(password);
             user = getUserByCredentialAndPassword((String) credential, password);
             user.flatMap(this::updateLoginDate).subscribe();
 
-            return user.flatMap(x -> countryRepository.findById(x.getCountryId())
-                            .map(y -> {
-                                x.setCountry(y);
-                                return x;
-                            })
-                    )
-                    .map(UserMapper::entityToResponseDto);
+            return convertLoginResponse(user);
         }
         throw new IllegalArgumentException("Wrong input, check credentials!");
+    }
+
+    private Mono<ResponseUserDto> convertLoginResponse(Mono<User> user) {
+        return user.flatMap(x -> countryRepository.findById(x.getCountryId())
+                        .map(y -> {
+                            x.setCountry(y);
+                            return x;
+                        })
+                )
+                .map(UserMapper::entityToResponseDto);
     }
 
     private Mono<User> getUserByPhone(Long phone) {
