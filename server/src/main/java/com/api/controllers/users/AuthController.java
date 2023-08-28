@@ -1,11 +1,15 @@
 package com.api.controllers.users;
 
+import com.api.configuration.JwtConfig;
 import com.api.controllers.dto.user.RegisterUserDto;
 import com.api.controllers.dto.user.ResponseUserDto;
 import com.api.services.users.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -14,18 +18,37 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private JwtConfig jwtUtil;
+
     @PostMapping(value = "/login/phone", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<ResponseUserDto> login(@RequestParam Long credential) {
-        return authService.getUser(credential, "");
+    public Mono<ResponseEntity<ResponseUserDto>> login(@RequestParam Long credential,
+                                                       ServerWebExchange serverWebExchange) {
+        return createResponse(credential, "", serverWebExchange);
     }
 
     @PostMapping(value = "/login/credential", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<ResponseUserDto> login(@RequestParam String credential, @RequestParam String password) {
-        return authService.getUser(credential, password);
+    public Mono<ResponseEntity<ResponseUserDto>> login(@RequestParam String username,
+                                                       @RequestParam String password,
+                                                       ServerWebExchange serverWebExchange) {
+        return createResponse(username, password, serverWebExchange);
     }
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<ResponseUserDto> register(@RequestBody RegisterUserDto userDto) {
-          return authService.register(userDto);
+    public Mono<ResponseEntity<ResponseUserDto>> register(@RequestBody RegisterUserDto userDto) {
+          return authService.register(userDto).map(user -> {
+              user.setToken(jwtUtil.generateToken(user));
+              return ResponseEntity.ok(user);
+          }).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    }
+
+    private Mono<ResponseEntity<ResponseUserDto>> createResponse(Object userCredential, String password,
+                                                                 ServerWebExchange serverWebExchange) {
+        return serverWebExchange.getFormData()
+                .flatMap(credential -> authService.getUser(userCredential, password))
+                .map(user -> {
+                    user.setToken(jwtUtil.generateToken(user));
+                    return ResponseEntity.ok(user);
+                }).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 }

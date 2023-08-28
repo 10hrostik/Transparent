@@ -1,8 +1,10 @@
 package com.api.controllers.dto.user;
 
 import com.api.controllers.dto.residence.CountryDto;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.sql.Date;
+import java.util.Collection;
 
 public class ResponseUserDto extends InitUserDto {
     private Long id;
@@ -18,6 +20,10 @@ public class ResponseUserDto extends InitUserDto {
     private Date loginDate;
 
     private CountryDto country;
+
+    private String token;
+
+    private Collection<? extends GrantedAuthority> roles;
 
     public Long getId() {
         return id;
@@ -73,5 +79,21 @@ public class ResponseUserDto extends InitUserDto {
 
     public void setCountry(CountryDto country) {
         this.country = country;
+    }
+
+    public Collection<? extends GrantedAuthority> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<? extends GrantedAuthority> roles) {
+        this.roles = roles;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

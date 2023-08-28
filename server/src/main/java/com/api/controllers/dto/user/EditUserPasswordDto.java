@@ -1,6 +1,6 @@
 package com.api.controllers.dto.user;
 
-public class EditUserPasswordDto extends InitUserDto{
+public class EditUserPasswordDto extends InitUserDto {
     private String newPassword;
 
     public String getNewPassword() {

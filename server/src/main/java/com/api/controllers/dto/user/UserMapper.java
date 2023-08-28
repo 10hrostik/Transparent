@@ -1,6 +1,7 @@
 package com.api.controllers.dto.user;
 
 import com.api.controllers.dto.residence.CountryMapper;
+import com.api.entities.user.Role;
 import com.api.entities.user.User;
 import com.api.utils.Validator;
 
@@ -17,6 +18,7 @@ public class UserMapper {
         responseUserDto.setSurname(user.getSurname());
         responseUserDto.setPhone(user.getPhone());
         responseUserDto.setLoginDate(Date.valueOf(user.getLoginDate()));
+        responseUserDto.setRoles(user.getAuthorities());
         if (user.getCountry() != null) responseUserDto.setCountry(CountryMapper.entityToDto(user.getCountry()));
 
         return responseUserDto;
@@ -28,6 +30,11 @@ public class UserMapper {
         user.setPhone(dto.getNumber());
         user.setRegisterDate(LocalDate.now());
         user.setLoginDate(LocalDate.now());
+        user.setAuthorities(Role.ROLE_USER);
+        user.setAccountNonExpired(true);
+        user.setCredentialsNonExpired(true);
+        user.setEnabled(true);
+        user.setAccountNonLocked(true);
         if (Validator.isEmail(dto.getCredential())) {
             user.setEmail(dto.getCredential());
         } else {
