@@ -2,11 +2,20 @@ import React from "react";
 import apiServer from "../../utils/ApiServer";
 
 function RegisterForm(props) {
-    const registerUrl = apiServer + 'public/auth/register'
+    const registerUrl = apiServer + 'public/auth/register';
+
     const register = (event) => {
         event.preventDefault();
-        const registerData= { credential: event.target.username.value,
-            password: event.target.password.value }
+        let registerData;
+        const credential = event.target.credential.value;
+        if (Number(credential)) {
+            registerData = { number: Number(credential),
+                password: event.target.password.value };
+        } else {
+            registerData = { credential: credential,
+                password: event.target.password.value };
+        }
+
         fetch(registerUrl ,{
             headers: {
                 'Accept': 'application/json',
@@ -31,8 +40,8 @@ function RegisterForm(props) {
         <div className={'authFormPopUp'}>
             <h1>Transparent</h1>
             <form onSubmit={register} method="POST">
-                <input id="registerUsername" className={'authInput'} type="text" placeholder={'username // email'}
-                       name="username" required></input>
+                <input id="registerCredential" className={'authInput'} type="text" placeholder={'phone // email'}
+                       name="credential" required></input>
                 <br/>
                 <input id="registerPassword" className={'authInput'} style={{marginBottom: 5}}
                        type="password" placeholder={'password'} name="password" required></input>

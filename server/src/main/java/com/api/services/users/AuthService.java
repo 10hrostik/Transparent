@@ -19,7 +19,10 @@ public class AuthService extends GeneralUserService implements ReactiveUserDetai
     }
 
     public Mono<ResponseUserDto> register(RegisterUserDto userDto) {
-        return userRepository.save(UserMapper.registerDtoToEntity(userDto)).map(UserMapper::entityToResponseDto);
+        return super.findByUsername(userDto.getCredential() != null ?
+                userDto.getCredential() : userDto.getNumber().toString())
+                .flatMap(x -> userRepository.save(UserMapper.registerDtoToEntity(userDto)).map(UserMapper::entityToResponseDto))
+                .doOnError(x -> { throw new IllegalArgumentException("User exists"); });
     }
 
     public Mono<ResponseUserDto> getUser(Object credential, String password) throws IllegalArgumentException {

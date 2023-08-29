@@ -35,7 +35,7 @@ public class UserMapper {
         user.setCredentialsNonExpired(true);
         user.setEnabled(true);
         user.setAccountNonLocked(true);
-        if (Validator.isEmail(dto.getCredential())) {
+        if (dto.getCredential() != null && Validator.isEmail(dto.getCredential())) {
             user.setEmail(dto.getCredential());
         } else {
             user.setUsername(dto.getCredential());

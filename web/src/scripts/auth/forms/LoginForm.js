@@ -43,7 +43,7 @@ function LoginForm(props) {
                        type="password" placeholder={'password'} name="password" required></input>
                 <br/>
                 <b onClick={handleAuthLayout} className={'forgotPasswordLabel'}>Sign up</b>
-                <b className={'doubleSlash'}>{ '//' } </b>
+                <b className={'doubleSlash'}>{ ' // ' } </b>
                 <b className={'forgotPasswordLabel'}>Forgot password?</b>
                 <br/>
                 <button id="loginButton" className={'loginButton'} type="submit">Login</button>
