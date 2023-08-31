@@ -27,16 +27,23 @@ function RegisterForm(props) {
             if (validatePhone(credential)) {
                 registerData = { number: Number(credential) };
             } else {
-                generateStatusTag('wrongRegisterPhoneInput',
+                if (document.getElementById('wrongRegisterEmailInput')) document.getElementById('wrongRegisterEmailInput').remove();
+                if (document.getElementById('wrongRegisterPasswordInput')) document.getElementById('wrongRegisterPasswordInput').remove();
+                if (!document.getElementById('wrongRegisterPhoneInput')) 
+                    generateStatusTag('wrongRegisterPhoneInput',
                     'wrongInput', 'Wrong phone number format!', 'registerForm');
+            
                 return;
             }
         } else {
             if (validateEmail(credential)) {
                 registerData = { credential: credential }
             } else {
-                generateStatusTag('wrongRegisterEmailInput',
-                    'wrongInput', 'Wrong email format!', 'registerForm');
+                if (document.getElementById('wrongRegisterPhoneInput')) document.getElementById('wrongRegisterPhoneInput').remove();
+                if (document.getElementById('wrongRegisterPasswordInput')) document.getElementById('wrongRegisterPasswordInput').remove();
+                if (!document.getElementById('wrongRegisterEmailInput'))
+                    generateStatusTag('wrongRegisterEmailInput',
+                        'wrongInput', 'Wrong email format!', 'registerForm');
                 return;
             }
         }
@@ -44,9 +51,12 @@ function RegisterForm(props) {
             registerData.password = password;
             return registerData;
         } else {
-            generateStatusTag('wrongRegisterPasswordInput',
-                'wrongInput', 'Password should be 8 chars long and contains a digit!',
-                'registerForm');
+            if (document.getElementById('wrongRegisterPhoneInput')) document.getElementById('wrongRegisterPhoneInput').remove();
+            if (document.getElementById('wrongRegisterEmaildInput')) document.getElementById('wrongRegisterEmailInput').remove();
+            if (!document.getElementById('wrongRegisterPasswordInput'))
+                generateStatusTag('wrongRegisterPasswordInput',
+                    'wrongInput', 'Password should be 8 chars long and contains a digit!',
+                    'registerForm');
         }
     }
 

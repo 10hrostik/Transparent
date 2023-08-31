@@ -2,20 +2,39 @@ import React from "react";
 import apiServer from "../../utils/ApiServer";
 import generateStatusTag from "../../utils/GenerateStatusTag";
 
+function validatePassword(password) {
+    if (password.length < 8) {
+        return false;
+    }
+    return /\d/.test(password);
+}
 
 function RestorePasswordForm(props) {
     const restorePasswordURL = apiServer + 'public/auth/restore/password';
 
     const handleRestorePassword = (event) => {
         event.preventDefault();
+        if (!validatePassword(event.target.newPassword.value)) {
+            let error = document.getElementById('wrongRestorePasswordInput');
+            let errorRepeated = document.getElementById('wrongRepeatedPasswordInput');
+            if (error) error.remove();
+            if (errorRepeated) errorRepeated.remove();
+            if (!document.getElementById('wrongRepeatedPasswordInput'))
+                generateStatusTag('wrongRepeatedPasswordInput',
+                    'wrongInput', 'Password should be 8 chars long and contains a digit!',
+                    'restorePasswordForm');
+            return;
+        }
         if (document.getElementById('successRestorePasswordInput'))
             return
         if (event.target.newPassword.value !== event.target.repeatNewPassword.value) {
             let error = document.getElementById('wrongRestorePasswordInput');
+            let errorPassword = document.getElementById('wrongRepeatedPasswordInput');
+            if (errorPassword) errorPassword.remove();
             if (error) error.remove();
             if (!document.getElementById('wrongRepeatedPasswordInput')) {
                 generateStatusTag('wrongRepeatedPasswordInput',
-                    'wrongInput', "Password doesn't match!", 'restorePasswordForm');
+                    'wrongInput', "Passwords don't match!", 'restorePasswordForm');
             }
             return;
         }
@@ -38,12 +57,16 @@ function RestorePasswordForm(props) {
         })
         .then(() => {
             let error = document.getElementById('wrongRestorePasswordInput');
+            let errorPassword = document.getElementById('wrongRepeatedPasswordInput');
+            if (errorPassword) errorPassword.remove();
             if (error) error.remove();
             generateStatusTag('successRestorePasswordInput',
                 'successInput', 'Password restored successfully!', 'restorePasswordForm');
             setTimeout(handleAuthLayout, 4000);
         })
         .catch(e => {
+            let errorPassword = document.getElementById('wrongRepeatedPasswordInput');
+            if (errorPassword) errorPassword.remove();
             if (!document.getElementById('wrongRestorePasswordInput')) {
                 generateStatusTag('wrongRestorePasswordInput',
                     'wrongInput', e, 'restorePasswordForm');
