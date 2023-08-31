@@ -1,6 +1,7 @@
 package com.api.controllers.users;
 
 import com.api.configuration.JwtConfig;
+import com.api.controllers.dto.user.EditUserPasswordDto;
 import com.api.controllers.dto.user.RegisterUserDto;
 import com.api.controllers.dto.user.ResponseUserDto;
 import com.api.services.users.AuthService;
@@ -40,6 +41,13 @@ public class AuthController {
               user.setToken(jwtUtil.generateToken(user));
               return ResponseEntity.ok(user);
           }).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    }
+
+    @PatchMapping(value = "/restore/password", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<ResponseEntity<Object>> restorePassword(@RequestBody EditUserPasswordDto passwordDto) {
+        return authService.restore(passwordDto).map(response -> ResponseEntity.status(HttpStatus.OK)
+                .build())
+                .defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
     private Mono<ResponseEntity<ResponseUserDto>> createResponse(Object userCredential, String password,

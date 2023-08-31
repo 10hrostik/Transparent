@@ -1,21 +1,59 @@
 import React from "react";
 import apiServer from "../../utils/ApiServer";
+import generateStatusTag from "../../utils/GenerateStatusTag";
+
+function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function validatePhone(phone) {
+    return phone.length === 12;
+}
+
+function validatePassword(password) {
+    if (password.length < 8) {
+        return false;
+    }
+    return /\d/.test(password);
+}
+
 
 function RegisterForm(props) {
     const registerUrl = apiServer + 'public/auth/register';
 
+    const buildRequest = (credential, password) => {
+        let registerData;
+        if (Number(credential)) {
+            if (validatePhone(credential)) {
+                registerData = { number: Number(credential) };
+            } else {
+                generateStatusTag('wrongRegisterPhoneInput',
+                    'wrongInput', 'Wrong phone number format!', 'registerForm');
+                return;
+            }
+        } else {
+            if (validateEmail(credential)) {
+                registerData = { credential: credential }
+            } else {
+                generateStatusTag('wrongRegisterEmailInput',
+                    'wrongInput', 'Wrong email format!', 'registerForm');
+                return;
+            }
+        }
+        if (validatePassword(password)) {
+            registerData.password = password;
+            return registerData;
+        } else {
+            generateStatusTag('wrongRegisterPasswordInput',
+                'wrongInput', 'Password should be 8 chars long and contains a digit!',
+                'registerForm');
+        }
+    }
+
     const register = (event) => {
         event.preventDefault();
-        let registerData;
-        const credential = event.target.credential.value;
-        if (Number(credential)) {
-            registerData = { number: Number(credential),
-                password: event.target.password.value };
-        } else {
-            registerData = { credential: credential,
-                password: event.target.password.value };
-        }
-
+        let registerData = buildRequest(event.target.credential.value, event.target.password.value);
+        if (!registerData) return;
         fetch(registerUrl ,{
             headers: {
                 'Accept': 'application/json',
@@ -29,7 +67,13 @@ function RegisterForm(props) {
                 localStorage.setItem('token', user.token)
                 props.setUser(user);
             })
-            .catch(e => console.log(e))
+            .catch(e => {
+                if (!document.getElementById('wrongRegisterInput')) {
+                    generateStatusTag('wrongRegisterInput',
+                        'wrongInput', 'User already exists!', 'registerForm');
+                    console.log(e)
+                }
+            })
     }
 
     const handleAuthLayout = () => {
@@ -39,7 +83,7 @@ function RegisterForm(props) {
     return (
         <div className={'authFormPopUp'}>
             <h1>Transparent</h1>
-            <form onSubmit={register} method="POST">
+            <form id={'registerForm'} onSubmit={register} method="POST">
                 <input id="registerCredential" className={'authInput'} type="text" placeholder={'phone // email'}
                        name="credential" required></input>
                 <br/>

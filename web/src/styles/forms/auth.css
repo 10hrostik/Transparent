@@ -21,6 +21,18 @@
     box-shadow: 2px 3px 3px black;
     animation: ani .5s forwards;
 }
+.restorePasswordButton {
+    width: 150px;
+    height: 30px;
+    font-size: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: 2px solid black;
+    font-family: "Comic Sans MS", serif;
+    cursor: pointer;
+    box-shadow: 2px 3px 3px black;
+    animation: ani .5s forwards;
+}
 .authInput {
     width: 250px;
     height: 30px;
@@ -53,9 +65,23 @@
     font-family: "Comic Sans MS", serif;
     font-size: 12px;
 }
+.successInput {
+    color: #66f83f;
+    font-family: "Comic Sans MS", serif;
+    font-size: 12px;
+}
 .authFormPopUp {
     width: 400px;
     height: 280px;
+    border: 3px solid black;
+    border-radius: 5%;
+    background: #194141;
+    box-shadow: 10px 5px 15px black;
+    animation: ani 2s forwards;
+}
+.restorePasswordFormPopUp {
+    width: 450px;
+    height: 350px;
     border: 3px solid black;
     border-radius: 5%;
     background: #194141;

@@ -1,5 +1,6 @@
 package com.api.services.users;
 
+import com.api.controllers.dto.user.EditUserPasswordDto;
 import com.api.controllers.dto.user.RegisterUserDto;
 import com.api.controllers.dto.user.ResponseUserDto;
 import com.api.controllers.dto.user.UserMapper;
@@ -19,10 +20,17 @@ public class AuthService extends GeneralUserService implements ReactiveUserDetai
     }
 
     public Mono<ResponseUserDto> register(RegisterUserDto userDto) {
-        return super.findByUsername(userDto.getCredential() != null ?
-                userDto.getCredential() : userDto.getNumber().toString())
-                .flatMap(x -> userRepository.save(UserMapper.registerDtoToEntity(userDto)).map(UserMapper::entityToResponseDto))
-                .doOnError(x -> { throw new IllegalArgumentException("User exists"); });
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+        return findByUsername(userDto.getCredential() != null ?
+                userDto.getCredential() : userDto.getNumber().toString()).cast(User.class)
+                .flatMap(x -> {
+                    if (x.getId() == null) {
+                        return userRepository.save(UserMapper.registerDtoToEntity(userDto));
+                    }
+                    return Mono.empty();
+                })
+                .map(UserMapper::entityToResponseDto);
     }
 
     public Mono<ResponseUserDto> getUser(Object credential, String password) throws IllegalArgumentException {
@@ -40,6 +48,19 @@ public class AuthService extends GeneralUserService implements ReactiveUserDetai
             return convertLoginResponse(user);
         }
         throw new IllegalArgumentException("Wrong input, check credentials!");
+    }
+
+    public Mono<Boolean> restore(EditUserPasswordDto passwordDto) throws IllegalArgumentException {
+        passwordDto.setNewPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
+        return findByUsername(passwordDto.getCredential()).cast(User.class)
+                .flatMap(user -> {
+                    if (user.getId() != null) {
+                        user.setPassword(passwordDto.getNewPassword());
+                        return userRepository.save(user);
+                    }
+                    return Mono.empty();
+                })
+                .map(x -> true);
     }
 
     private Mono<ResponseUserDto> convertLoginResponse(Mono<User> user) {

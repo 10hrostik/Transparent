@@ -5,7 +5,6 @@ import com.api.repositories.CountryRepository;
 import com.api.repositories.UserRepository;
 import com.api.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public abstract class GeneralUserService {
             Long number = Long.parseLong(username);
             user = userRepository.findByPhone(number);
 
-            return user.cast(UserDetails.class);
+            return user.cast(UserDetails.class).defaultIfEmpty(new User());
         } catch (NumberFormatException exception){
             if (Validator.isEmail(username)) {
                 user = userRepository.findByEmail(username);
@@ -37,7 +36,7 @@ public abstract class GeneralUserService {
                 user =  userRepository.findByUsername(username);
             }
 
-            return user.cast(UserDetails.class);
+            return user.cast(UserDetails.class).defaultIfEmpty(new User());
         }
     }
 

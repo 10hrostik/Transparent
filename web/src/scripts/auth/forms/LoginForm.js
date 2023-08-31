@@ -1,5 +1,6 @@
 import apiServer from "../../utils/ApiServer";
 import React from "react";
+import generateStatusTag from "../../utils/GenerateStatusTag";
 
 function LoginForm(props) {
     const loginURL = apiServer + 'public/auth/login/credential';
@@ -10,26 +11,26 @@ function LoginForm(props) {
             + "&password=" + event.target.password.value, {
             method: 'POST'
         }).then((response) => response.json())
-            .then(user => {
-                localStorage.setItem('user', JSON.stringify(user))
-                localStorage.setItem('token', user.token)
-                props.setUser(user);
-            })
-            .catch(e => {
-                    let el = document.createElement("b");
-                    el.id = 'wrongInput';
-                    el.className = 'wrongInput';
-                    el.textContent = 'Incorrect username or password';
-                    document.getElementById('loginForm')
-                        .appendChild(document.createElement('br')).appendChild(el);
-                    document.getElementById('loginForm').appendChild(el)
-                    console.log(e)
-                }
-            )
+        .then(user => {
+            localStorage.setItem('user', JSON.stringify(user))
+            localStorage.setItem('token', user.token)
+            props.setUser(user);
+        })
+        .catch(e => {
+            if (!document.getElementById('wrongLoginInput')) {
+                generateStatusTag('wrongLoginInput',
+                    'wrongInput', 'Incorrect username or password!', 'loginForm');
+                console.log(e)
+            }
+        })
     }
 
     const handleAuthLayout = () => {
         props.toggleToRegister(true);
+    }
+
+    const handleRestorePasswordLayout = () => {
+        props.toggleToRestore(true);
     }
 
     return (
@@ -44,7 +45,7 @@ function LoginForm(props) {
                 <br/>
                 <b onClick={handleAuthLayout} className={'forgotPasswordLabel'}>Sign up</b>
                 <b className={'doubleSlash'}>{ ' // ' } </b>
-                <b className={'forgotPasswordLabel'}>Forgot password?</b>
+                <b onClick={handleRestorePasswordLayout} className={'forgotPasswordLabel'}>Forgot password?</b>
                 <br/>
                 <button id="loginButton" className={'loginButton'} type="submit">Login</button>
             </form>
