@@ -1,0 +1,16 @@
+.sideBar {
+    height: 100%;
+    width: 75px;
+    background-color: #194141;
+}
+.logoutImage {
+    background-color: transparent;
+    cursor: pointer;
+}
+.logoutImageButton {
+    width: 100%;
+    text-align: center; 
+    background-color: transparent;
+    border: none;
+    margin-top: 5px;
+}

@@ -21,7 +21,6 @@ public class AuthService extends GeneralUserService implements ReactiveUserDetai
 
     public Mono<ResponseUserDto> register(RegisterUserDto userDto) {
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
         return findByUsername(userDto.getCredential() != null ?
                 userDto.getCredential() : userDto.getNumber().toString()).cast(User.class)
                 .flatMap(x -> {
