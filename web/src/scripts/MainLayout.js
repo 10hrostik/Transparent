@@ -9,7 +9,7 @@ function MainLayout() {
 
     useEffect(() => {
         if (user) {
-            setLayout(<GreetLayout user = {user}/>)
+            setLayout(<GreetLayout user = {user} setUser = {setUser}/>)
         } else {
             setLayout(<Auth setUser = {setUser}/>)
         }

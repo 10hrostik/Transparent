@@ -14,3 +14,64 @@
     border: none;
     margin-top: 5px;
 }
+.logoutPopUp {
+    height: 150px;
+    width: 350px;
+    position: absolute;
+    border: 2px solid black;
+    box-shadow: 10px 5px 15px black;
+    background-color: #194141;
+    justify-self: center;
+    align-self: center;
+    border-radius: 10px;
+    animation: ani 0.5s forwards;
+
+}
+.logoutHeader {
+    height: 25%;
+    width: 100%;
+    border-bottom: 2px solid black;
+}
+.logoutBody {
+    height: 75%;
+    width: 100%;
+    text-align: center;
+    float: left;
+}
+.cancelLogoutButton {
+    width: 90px;
+    height: 35px;
+    background-color: transparent;
+    border: none;
+    color: #e56868;
+    border-radius: 10px;
+    font-size: 18px;
+    transition: background-color 0.4s ease;
+}
+.cancelLogoutButton:hover {
+    background-color : rgba(229, 104, 104, 0.4);
+    color: #a40000;
+}
+.logoutButton {
+    width: 90px;
+    height: 35px;
+    background-color: transparent;
+    border: none;
+    color: #4E6D8C;
+    font-size: 18px;
+    border-radius: 10px;
+    transition: background-color 0.4s ease;
+}
+.logoutButton:hover {
+    background-color: rgba(78, 109, 140, 0.4);
+    color: #142936;
+}
+@keyframes ani {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+@keyframes ani-exit {
+    0% {opacity: 1;}
+    100% {opacity: 0;}
+}
