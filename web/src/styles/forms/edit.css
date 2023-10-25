@@ -1,0 +1,11 @@
+.editPopUpHeader {
+    width: 100%;
+    height: 30%;
+    border-bottom: 2px solid black;
+}
+.editPhotoContainer {
+    height: 100%;
+    width: 42.5%;
+    border-right: 1px solid black;
+    float: left;
+}

@@ -5,6 +5,7 @@ function generateLogoutPopUp(callback) {
     generateHeader(body);
     generateBottom(body, callback);
 }
+
 function generateHeader (body) {
     let header = document.createElement('div');
     header.className = 'logoutHeader';
@@ -17,11 +18,14 @@ function generateHeader (body) {
     header.appendChild(text);
     body.appendChild(header)
 }
+
 function generateBody () {
     let element = document.createElement('div');
+    let background = generateBackground();
     element.className = 'logoutPopUp';
     element.id = 'logoutPopUp';
     document.getElementById('mainLayout').appendChild(element);
+    document.getElementById('mainLayout').appendChild(background);
 
     return element;
 }
@@ -38,6 +42,7 @@ function generateBottom (body, callback) {
     cancelButton.textContent = 'Cancel';
     cancelButton.onclick = () => {
         document.getElementById('logoutPopUp').remove();
+        document.getElementById('backgroundWindow').remove();
     }
     let logoutButton = document.createElement('button');
     logoutButton.id = 'cancelButton';
@@ -60,15 +65,29 @@ function logout (callback) {
     }).then((response) => response.text())
         .then(() => {
             document.getElementById('logoutPopUp').remove();
-            localStorage.clear();
+            document.getElementById('backgroundWindow').remove();
+            sessionStorage.clear();
             callback(null);
         })
         .catch(e => {
             console.log(e);
             document.getElementById('logoutPopUp').remove();
-            localStorage.clear();
+            document.getElementById('backgroundWindow').remove();
+            sessionStorage.clear();
             callback(null);
         })
+}
+
+function generateBackground () {
+    let windowElement = document.createElement('div');
+    windowElement.id = 'backgroundWindow'
+    windowElement.className = 'sideBarIconWindow';
+    windowElement.onclick = () => {
+        windowElement.remove();
+        document.getElementById('logoutPopUp').remove()
+    }
+
+    return windowElement;
 }
 
 export default generateLogoutPopUp;

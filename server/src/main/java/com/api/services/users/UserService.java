@@ -1,5 +1,6 @@
 package com.api.services.users;
 
+import com.api.controllers.dto.user.EditUserProfileDto;
 import com.api.controllers.dto.user.ResponseUserDto;
 import com.api.controllers.dto.user.UserMapper;
 import com.api.entities.user.User;
@@ -8,11 +9,20 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class UserService extends GeneralUserService {
-    public Mono<ResponseUserDto> editUser(String credentials, String newPassword) {
+    public Mono<ResponseUserDto> editUserPassword(String credentials, String newPassword) {
         Mono<User> userMono = findByUsername(credentials).cast(User.class);
         userMono.flatMap(x -> userRepository
                 .updatePassword(passwordEncoder.encode(newPassword), x.getId())).subscribe();
 
         return userMono.map(UserMapper::entityToResponseDto);
+    }
+
+    public Mono<ResponseUserDto> editUser(EditUserProfileDto userProfileDto) {
+        return userRepository.findById(userProfileDto.getId()).flatMap(user -> {
+            if (user.getId() != null) {
+                return userRepository.save(UserMapper.editUser(userProfileDto, user));
+            }
+            return Mono.empty();
+        }).map(UserMapper::entityToResponseDto);
     }
 }

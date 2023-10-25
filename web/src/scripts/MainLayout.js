@@ -4,7 +4,7 @@ import '../styles/MainLayout.css'
 import GreetLayout from "./chat/GreetLayout";
 
 function MainLayout() {
-    const [user, setUser] = useState(localStorage.getItem('user'));
+    const [user, setUser] = useState(sessionStorage.getItem('user'));
     const [layout, setLayout] = useState(null);
 
     useEffect(() => {

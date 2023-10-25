@@ -43,4 +43,13 @@ public class UserMapper {
 
         return user;
     }
+
+    public static User editUser(EditUserProfileDto userProfileDto, User user) {
+        user.setName(userProfileDto.getName());
+        user.setSurname(userProfileDto.getSurname());
+        user.setPhone(userProfileDto.getPhoneNumber());
+        user.setUsername(userProfileDto.getCredential());
+
+        return user;
+    }
 }

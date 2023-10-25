@@ -1,6 +1,8 @@
 package com.api.controllers.users;
 
+import com.api.configuration.JwtConfig;
 import com.api.controllers.dto.user.EditUserPasswordDto;
+import com.api.controllers.dto.user.EditUserProfileDto;
 import com.api.controllers.dto.user.ResponseUserDto;
 import com.api.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +25,21 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JwtConfig jwtUtil;
+
     @PatchMapping(value = "/edit/password", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseUserDto> editPassword(@RequestBody EditUserPasswordDto dto) {
-        return userService.editUser(dto.getCredential(), dto.getNewPassword());
+        return userService.editUserPassword(dto.getCredential(), dto.getNewPassword());
+    }
+
+    @PatchMapping(value = "/edit", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<ResponseEntity<ResponseUserDto>> editProfile(@RequestBody EditUserProfileDto userProfileDto) {
+        return userService.editUser(userProfileDto)
+                .map(user -> {
+                    user.setToken(jwtUtil.generateToken(user));
+                    return ResponseEntity.ok(user);
+                }).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
     @GetMapping(value = "/logout")
@@ -44,6 +58,5 @@ public class UserController {
             e.printStackTrace();
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
         }
-
     }
 }

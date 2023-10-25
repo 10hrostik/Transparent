@@ -1,12 +1,17 @@
 package com.api.entities.residence;
 
+import com.api.entities.user.User;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+
+import java.util.List;
 
 @Table(name = "countries")
 public class Country {
     @Id
+    @jakarta.persistence.Id
     private Integer id;
 
     @Column(value = "name")
@@ -14,6 +19,9 @@ public class Country {
 
     @Column(value = "phone_preffix")
     private Short phonePreffix;
+
+    @Transient
+    private List<User> users;
 
     public Integer getId() {
         return id;
@@ -37,5 +45,13 @@ public class Country {
 
     public void setPhonePreffix(Short phonePreffix) {
         this.phonePreffix = phonePreffix;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

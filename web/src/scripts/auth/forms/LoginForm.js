@@ -12,8 +12,8 @@ function LoginForm(props) {
             method: 'POST'
         }).then((response) => response.json())
         .then(user => {
-            localStorage.setItem('user', JSON.stringify(user))
-            localStorage.setItem('token', user.token)
+            sessionStorage.setItem('user', JSON.stringify(user))
+            sessionStorage.setItem('token', user.token)
             props.setUser(user);
         })
         .catch(e => {

@@ -1,5 +1,6 @@
 package com.api.entities.user;
 
+import com.api.entities.attachment.Attachment;
 import com.api.entities.residence.Country;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -12,10 +13,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
+    @jakarta.persistence.Id
     private Long id;
 
     @Column(value = "username")
@@ -62,6 +65,9 @@ public class User implements UserDetails {
 
     @Transient
     private Country country;
+
+    @Transient
+    private Set<Attachment> attachments;
 
     public User () {
         accountNonExpired = true;
