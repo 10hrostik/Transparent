@@ -4,6 +4,7 @@ import com.api.configuration.JwtConfig;
 import com.api.controllers.dto.user.EditUserPasswordDto;
 import com.api.controllers.dto.user.EditUserProfileDto;
 import com.api.controllers.dto.user.ResponseUserDto;
+import com.api.entities.user.User;
 import com.api.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -58,5 +59,14 @@ public class UserController {
             e.printStackTrace();
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
         }
+    }
+
+    @GetMapping("/refresh/{username}")
+    public Mono<ResponseEntity<String>> refreshToken(@PathVariable String username) {
+        return userService.findByUsername(username).cast(User.class)
+                .map(user -> {
+                    String token = jwtUtil.generateToken(user);
+                    return ResponseEntity.ok(token);
+                }).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 }

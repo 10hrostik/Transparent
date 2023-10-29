@@ -1,21 +1,24 @@
 package com.api.controllers.Attachments;
 
 public class AttachmentDto {
-    private byte[] file;
+    private long id;
+
+    private String url;
 
     private String imageType;
 
-    public AttachmentDto(byte[] file, String imageType) {
-        this.file = file;
+    public AttachmentDto(long id, String url, String imageType) {
+        this.id = id;
+        this.url = url;
         this.imageType = imageType;
     }
 
-    public byte[] getFile() {
-        return file;
+    public String getUrl() {
+        return url;
     }
 
-    public void setFile(byte[] file) {
-        this.file = file;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getImageType() {
@@ -24,5 +27,13 @@ public class AttachmentDto {
 
     public void setImageType(String imageType) {
         this.imageType = imageType;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

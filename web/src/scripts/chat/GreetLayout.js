@@ -1,10 +1,22 @@
-import React, {useState} from "react";
+import React, {useEffect} from "react";
 import '../../styles/greetLayoutOut/sideBar.css';
 import '../../styles/greetLayoutOut/topBar.css';
 import generateLogoutPopUp from "../utils/GenerateLogoutPopUp";
 import generateUserPopUp from "../utils/GenerateEditProfilePopUp";
+import apiServer from "../utils/ApiServer";
+import refreshLoop from "../utils/RefreshLoop";
 
 function GreetLayout(props) {
+    useEffect(() => {
+        let credential;
+        try {
+            credential = JSON.parse(props.user).credential;
+        } catch (e) {
+            if (typeof props.user === 'object') credential = props.user.credential
+        }
+       refreshLoop.fun = setInterval(() => refresh(credential), 3600000);
+    }, [props])
+
     const handleLogout = () => {
         generateLogoutPopUp(props.setUser);
     }
@@ -20,6 +32,21 @@ function GreetLayout(props) {
             sidebar.style.left = `-${sidebarWidth}px`;
         } else {
             sidebar.style.left = '0px';
+        }
+    }
+
+    const refresh = (username) => {
+        if (sessionStorage.getItem('token')) {
+            fetch(apiServer + "secured/user/refresh/" + username, {
+                headers: {
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+                },
+                method: 'GET'
+            }).then((response) => response.text())
+                .then(token => {
+                    sessionStorage.setItem('token', token)
+                    console.log('Token refreshed!')
+                })
         }
     }
 

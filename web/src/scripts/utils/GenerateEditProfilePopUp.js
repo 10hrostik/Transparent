@@ -1,6 +1,8 @@
 import '../../styles/forms/edit.css';
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
+import apiServer from "./ApiServer";
+
+let images;
+let image = [];
 
 function generateUserPopUp () {
     let bodyElement = buildPopUp();
@@ -22,15 +24,28 @@ function buildPopUp () {
 function getHeader () {
     let element = document.createElement('div');
     element.className = 'editPopUpHeader';
-    createForm(element);
+    createForm(element).then();
 
     return element;
 }
 
-function createForm (header) {
+async function createForm (header) {
     let photoLayout = document.createElement('div');
     photoLayout.id = 'photoLayout';
-    photoLayout.className = 'editPhotoContainer'
+    photoLayout.className = 'editPhotoContainer';
+    const userId = JSON.parse(sessionStorage.getItem('user')).id;
+    images = await getPhotos(userId);
+    image = await fetch(apiServer + "secured/attachment/photos/user/" + userId, {
+        headers: {
+            'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+        },
+        method: 'GET'
+    }).then(response => response.blob())
+    let photo = document.createElement('img');
+    photo.src = URL.createObjectURL(image);
+    photo.className = 'mainUserPhoto';
+    photoLayout.appendChild(photo)
+
     header.appendChild(photoLayout);
 }
 
@@ -43,6 +58,16 @@ function generateBackground () {
     }
 
     return windowElement;
+}
+
+async function getPhotos (id) {
+    return await fetch(apiServer + "secured/attachment/photos/user/all/" + id, {
+        headers: {
+            'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+        },
+        method: 'GET'
+    })
+        .then(response => response.json());
 }
 
 export default generateUserPopUp;

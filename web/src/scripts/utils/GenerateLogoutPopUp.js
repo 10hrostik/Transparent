@@ -1,4 +1,5 @@
 import apiServer from "./ApiServer";
+import refreshLoop from "./RefreshLoop";
 
 function generateLogoutPopUp(callback) {
     let body = generateBody();
@@ -59,7 +60,7 @@ function logout (callback) {
     const logoutURL = apiServer + 'secured/user/logout';
     fetch(logoutURL, {
         headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('token')
+            'Authorization': 'Bearer ' + sessionStorage.getItem('token')
         },
         method: 'GET'
     }).then((response) => response.text())
@@ -67,6 +68,7 @@ function logout (callback) {
             document.getElementById('logoutPopUp').remove();
             document.getElementById('backgroundWindow').remove();
             sessionStorage.clear();
+            clearInterval(refreshLoop.fun);
             callback(null);
         })
         .catch(e => {
@@ -74,6 +76,7 @@ function logout (callback) {
             document.getElementById('logoutPopUp').remove();
             document.getElementById('backgroundWindow').remove();
             sessionStorage.clear();
+            clearInterval(refreshLoop.fun);
             callback(null);
         })
 }
