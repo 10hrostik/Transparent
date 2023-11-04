@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import '../../styles/greetLayoutOut/sideBar.css';
 import '../../styles/greetLayoutOut/topBar.css';
 import generateLogoutPopUp from "../utils/GenerateLogoutPopUp";
@@ -7,22 +7,28 @@ import apiServer from "../utils/ApiServer";
 import refreshLoop from "../utils/RefreshLoop";
 
 function GreetLayout(props) {
+    const [user, setUser] = useState(null);
     useEffect(() => {
         let credential;
         try {
-            credential = JSON.parse(props.user).credential;
+            let userFromJson = JSON.parse(props.user);
+            setUser(userFromJson);
+            credential = userFromJson.credential;
         } catch (e) {
-            if (typeof props.user === 'object') credential = props.user.credential
+            if (typeof props.user === 'object') {
+                setUser(props.user);
+                credential = props.user.credential
+            }
         }
-       refreshLoop.fun = setInterval(() => refresh(credential), 3600000);
-    }, [props])
+       refreshLoop.fun = setInterval(() => refresh(credential), 60000 * 60 * 24);
+    }, [])
 
     const handleLogout = () => {
         generateLogoutPopUp(props.setUser);
     }
 
     const handleProfileButton = () => {
-        generateUserPopUp();
+        generateUserPopUp(user);
     }
 
     const toggleSideBar = () => {
@@ -46,6 +52,11 @@ function GreetLayout(props) {
                 .then(token => {
                     sessionStorage.setItem('token', token)
                     console.log('Token refreshed!')
+                })
+                .catch(() => {
+                    sessionStorage.clear();
+                    clearInterval(refreshLoop.fun);
+                    props.setUser(null);
                 })
         }
     }

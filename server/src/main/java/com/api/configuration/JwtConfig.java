@@ -56,7 +56,7 @@ public class JwtConfig {
     private String generateToken(Map<String, Object> claims, String credential) {
         long expirationSeconds = Long.parseLong(expirationTime);
         Date creationDate = new Date();
-        Date expirationDate = new Date(creationDate.getTime() + expirationSeconds * 3000);
+        Date expirationDate = new Date(creationDate.getTime() + expirationSeconds * 60 * 24);
 
         return Jwts.builder()
                 .setClaims(claims)
