@@ -1,4 +1,4 @@
-package com.api.controllers.Attachments;
+package com.api.controllers.attachments;
 
 import com.api.services.attachments.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +11,12 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("api/secured/attachment")
+@RequestMapping("api/secured/attachments")
 public class AttachmentController {
     @Autowired
     private AttachmentService attachmentService;
 
-    @GetMapping("/photos/user/all/{id}")
+    @GetMapping("/photos/user/{id}/all/")
     public Flux<AttachmentDto> getUserPhotos(@PathVariable Long id) {
         return attachmentService.getUserPhotos(id);
     }

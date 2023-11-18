@@ -1,6 +1,6 @@
 package com.api.services.attachments;
 
-import com.api.controllers.Attachments.AttachmentDto;
+import com.api.controllers.attachments.AttachmentDto;
 import com.api.entities.attachment.Attachment;
 import com.api.entities.attachment.AttachmentUser;
 import com.api.repositories.AttachmentRepository;

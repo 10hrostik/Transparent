@@ -48,7 +48,7 @@ function generateBackground () {
 }
 
 async function getPhotos (id) {
-    return await fetch(apiServer + "secured/attachment/photos/user/all/" + id, {
+    return await fetch(apiServer + "secured/attachments/photos/user/" + id + "/all/", {
         headers: {
             'Authorization': 'Bearer ' + sessionStorage.getItem('token')
         },
@@ -63,7 +63,7 @@ async function getPhotoLayout(header) {
     photoLayout.className = 'editPhotoContainer';
     const userId = JSON.parse(sessionStorage.getItem('user')).id;
     images = await getPhotos(userId);
-    image = await fetch(apiServer + "secured/attachment/photos/user/" + userId, {
+    image = await fetch(apiServer + "secured/attachments/photos/user/" + userId, {
         headers: {
             'Authorization': 'Bearer ' + sessionStorage.getItem('token')
         },

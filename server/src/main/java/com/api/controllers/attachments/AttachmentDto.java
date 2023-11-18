@@ -1,4 +1,4 @@
-package com.api.controllers.Attachments;
+package com.api.controllers.attachments;
 
 public class AttachmentDto {
     private long id;
