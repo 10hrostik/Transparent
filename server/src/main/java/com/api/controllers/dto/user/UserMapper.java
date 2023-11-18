@@ -30,7 +30,6 @@ public class UserMapper {
         user.setPhone(dto.getNumber());
         user.setRegisterDate(LocalDate.now());
         user.setLoginDate(LocalDate.now());
-        user.setAuthorities(Role.ROLE_USER);
         user.setAccountNonExpired(true);
         user.setCredentialsNonExpired(true);
         user.setEnabled(true);

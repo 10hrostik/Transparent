@@ -1,6 +1,7 @@
 package com.api.entities.residence;
 
 import com.api.entities.user.User;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
@@ -9,9 +10,9 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.util.List;
 
 @Table(name = "countries")
+@Data
 public class Country {
     @Id
-    @jakarta.persistence.Id
     private Integer id;
 
     @Column(value = "name")
@@ -22,36 +23,4 @@ public class Country {
 
     @Transient
     private List<User> users;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Short getPhonePreffix() {
-        return phonePreffix;
-    }
-
-    public void setPhonePreffix(Short phonePreffix) {
-        this.phonePreffix = phonePreffix;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
 }

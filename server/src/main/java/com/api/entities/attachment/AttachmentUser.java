@@ -1,9 +1,11 @@
 package com.api.entities.attachment;
 
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+@Data
 @Table(name = "attachment_user")
 public class AttachmentUser {
     @Id
@@ -14,28 +16,4 @@ public class AttachmentUser {
 
     @Column(value = "attachment_id")
     private Long attachmentId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getAttachmentId() {
-        return attachmentId;
-    }
-
-    public void setAttachmentId(Long attachmentId) {
-        this.attachmentId = attachmentId;
-    }
 }
