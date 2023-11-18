@@ -1,7 +1,6 @@
 package com.api.controllers.dto.user;
 
 import com.api.controllers.dto.residence.CountryMapper;
-import com.api.entities.user.Role;
 import com.api.entities.user.User;
 import com.api.utils.Validator;
 

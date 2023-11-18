@@ -1,13 +1,10 @@
 package com.api.controllers.dto.user;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class EditUserPasswordDto extends InitUserDto {
     private String newPassword;
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
 }

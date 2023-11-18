@@ -3,7 +3,6 @@ package com.api.entities.user;
 import com.api.entities.attachment.Attachment;
 import com.api.entities.residence.Country;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;

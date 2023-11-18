@@ -6,16 +6,12 @@ import com.api.controllers.dto.user.EditUserProfileDto;
 import com.api.controllers.dto.user.ResponseUserDto;
 import com.api.entities.user.User;
 import com.api.services.users.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-import reactor.netty.http.client.HttpClientRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -23,18 +19,21 @@ import java.util.Map;
 @RestController
 @RequestMapping("api/secured/user")
 public class UserController {
-    @Autowired
     private UserService userService;
 
-    @Autowired
     private JwtConfig jwtUtil;
 
-    @PatchMapping(value = "/edit/password", produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserController(UserService userService, JwtConfig jwtUtil) {
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
+    }
+
+    @PatchMapping(value = "/password", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseUserDto> editPassword(@RequestBody EditUserPasswordDto dto) {
         return userService.editUserPassword(dto.getCredential(), dto.getNewPassword());
     }
 
-    @PatchMapping(value = "/edit", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<ResponseUserDto>> editProfile(@RequestBody EditUserProfileDto userProfileDto) {
         return userService.editUser(userProfileDto)
                 .map(user -> {
@@ -56,7 +55,6 @@ public class UserController {
 
             return Mono.just(ResponseEntity.status(HttpStatus.OK).build());
         } catch (Exception e) {
-            e.printStackTrace();
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
         }
     }

@@ -5,8 +5,11 @@ import com.api.controllers.dto.user.RegisterUserDto;
 import com.api.controllers.dto.user.ResponseUserDto;
 import com.api.controllers.dto.user.UserMapper;
 import com.api.entities.user.User;
+import com.api.repositories.CountryRepository;
+import com.api.repositories.UserRepository;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
@@ -14,6 +17,10 @@ import reactor.core.publisher.Mono;
 @Service
 @Transactional
 public class AuthService extends GeneralUserService implements ReactiveUserDetailsService {
+    public AuthService(UserRepository userRepository, CountryRepository countryRepository, PasswordEncoder passwordEncoder) {
+        super(userRepository, countryRepository, passwordEncoder);
+    }
+
     @Override
     public Mono<UserDetails> findByUsername(String username) {
         return super.findByUsername(username);

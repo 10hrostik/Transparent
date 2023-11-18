@@ -1,11 +1,11 @@
 package com.api.services.attachments;
 
-import com.api.controllers.attachments.AttachmentDto;
+import com.api.controllers.dto.attachment.AttachmentDto;
 import com.api.entities.attachment.Attachment;
 import com.api.entities.attachment.AttachmentUser;
 import com.api.repositories.AttachmentRepository;
 import com.api.repositories.AttachmentUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,15 +20,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 @Service
+@RequiredArgsConstructor
 public class AttachmentService {
-    @Autowired
-    private AttachmentRepository attachmentRepository;
-
-    @Autowired
-    private AttachmentUserRepository attachmentUserRepository;
-
     @Value("${attachments.dir}")
     private String folderPath;
+
+    private final AttachmentRepository attachmentRepository;
+
+    private final AttachmentUserRepository attachmentUserRepository;
 
     public Flux<AttachmentDto> getUserPhotos(Long userId) {
         Flux<AttachmentUser> attachmentUserFlux = attachmentUserRepository.findAttachmentUserByUserId(userId);

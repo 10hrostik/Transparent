@@ -4,11 +4,18 @@ import com.api.controllers.dto.user.EditUserProfileDto;
 import com.api.controllers.dto.user.ResponseUserDto;
 import com.api.controllers.dto.user.UserMapper;
 import com.api.entities.user.User;
+import com.api.repositories.CountryRepository;
+import com.api.repositories.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
 public class UserService extends GeneralUserService {
+    public UserService(UserRepository userRepository, CountryRepository countryRepository, PasswordEncoder passwordEncoder) {
+        super(userRepository, countryRepository, passwordEncoder);
+    }
+
     public Mono<ResponseUserDto> editUserPassword(String credentials, String newPassword) {
         Mono<User> userMono = findByUsername(credentials).cast(User.class);
         userMono.flatMap(x -> userRepository

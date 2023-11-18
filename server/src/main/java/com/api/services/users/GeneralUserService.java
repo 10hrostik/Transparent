@@ -4,7 +4,6 @@ import com.api.entities.user.User;
 import com.api.repositories.CountryRepository;
 import com.api.repositories.UserRepository;
 import com.api.utils.Validator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,14 +12,17 @@ import java.time.LocalDate;
 
 @Service
 public abstract class GeneralUserService {
-    @Autowired
     protected UserRepository userRepository;
 
-    @Autowired
     protected CountryRepository countryRepository;
 
-    @Autowired
     protected PasswordEncoder passwordEncoder;
+
+    public GeneralUserService(UserRepository userRepository, CountryRepository countryRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.countryRepository = countryRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public Mono<UserDetails> findByUsername(String username) {
         Mono<User> user;

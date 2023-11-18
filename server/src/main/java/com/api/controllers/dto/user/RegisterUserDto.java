@@ -1,13 +1,10 @@
 package com.api.controllers.dto.user;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public final class RegisterUserDto extends InitUserDto {
     private Long number;
-
-    public Long getNumber() {
-        return number;
-    }
-
-    public void setNumber(Long number) {
-        this.number = number;
-    }
 }

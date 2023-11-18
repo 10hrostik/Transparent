@@ -5,7 +5,6 @@ import com.api.controllers.dto.user.EditUserPasswordDto;
 import com.api.controllers.dto.user.RegisterUserDto;
 import com.api.controllers.dto.user.ResponseUserDto;
 import com.api.services.users.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +15,14 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("api/public/auth")
 public class AuthController {
-    @Autowired
     private AuthService authService;
 
-    @Autowired
     private JwtConfig jwtUtil;
+
+    public AuthController(AuthService authService, JwtConfig jwtUtil) {
+        this.authService = authService;
+        this.jwtUtil = jwtUtil;
+    }
 
     @PostMapping(value = "/login/phone", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<ResponseUserDto>> login(@RequestParam Long credential,
