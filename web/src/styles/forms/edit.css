@@ -1,0 +1,57 @@
+.editPopUpHeader {
+    width: 100%;
+    height: 30%;
+    border-bottom: 2px solid black;
+}
+.editPhotoContainer {
+    height: 100%;
+    width: 42.5%;
+    border-right: 1px solid black;
+    float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.mainUserPhoto {
+    width: 115px;
+    height: 115px;
+    border: black solid 2px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.mainUserPhoto:hover {
+    background-color: black;
+    opacity: 50%;
+    background-size: 115px 58px;
+}
+.editCredentialContainer {
+    height: 100%;
+    width: 57%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.editCredentialForm {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    align-items: center;
+    text-align: center;
+    grid-gap: 20px;
+}
+.editCredentialInput,
+.editPhoneInput {
+    float: none;
+    background: transparent;
+    border: none;
+    height: 30px;
+    width: 100%;
+    font-family: "Comic Sans MS", serif;
+    font-size: 16px;
+    outline: none;
+    text-align: center;
+    text-decoration: underline;
+}
+.editPhoneInput {
+    margin-top: -60px;
+}

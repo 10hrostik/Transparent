@@ -1,0 +1,9 @@
+package com.api.repositories;
+
+import com.api.entities.attachment.AttachmentUser;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import reactor.core.publisher.Flux;
+
+public interface AttachmentUserRepository extends R2dbcRepository<AttachmentUser, Long> {
+    Flux<AttachmentUser> findAttachmentUserByUserId(Long userId);
+}

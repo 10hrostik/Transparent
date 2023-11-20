@@ -1,0 +1,94 @@
+.loginButton {
+    width: 70px;
+    height: 30px;
+    font-size: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: 2px solid black;
+    font-family: "Comic Sans MS", serif;
+    cursor: pointer;
+    box-shadow: 2px 3px 3px black;
+}
+.registerButton {
+    width: 80px;
+    height: 30px;
+    font-size: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: 2px solid black;
+    font-family: "Comic Sans MS", serif;
+    cursor: pointer;
+    box-shadow: 2px 3px 3px black;
+    animation: ani .5s forwards;
+}
+.restorePasswordButton {
+    width: 150px;
+    height: 30px;
+    font-size: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: 2px solid black;
+    font-family: "Comic Sans MS", serif;
+    cursor: pointer;
+    box-shadow: 2px 3px 3px black;
+    animation: ani .5s forwards;
+}
+.authInput {
+    width: 250px;
+    height: 30px;
+    border-radius: 8px;
+    border: 2px solid black;
+    margin-bottom: 15px;
+    font-size: 15px;
+    font-family: "Comic Sans MS", serif;
+}
+.forgotPasswordLabel {
+    font-size: 12px;
+    cursor: pointer;
+}
+.doubleSlash {
+    font-size: 12px;
+}
+.forgotPasswordLabel:hover {
+    text-decoration: underline;
+}
+.rootAuthForm {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.wrongInput {
+    color: #e56868;
+    font-family: "Comic Sans MS", serif;
+    font-size: 12px;
+}
+.successInput {
+    color: #66f83f;
+    font-family: "Comic Sans MS", serif;
+    font-size: 12px;
+}
+.authFormPopUp {
+    width: 400px;
+    height: 280px;
+    border: 3px solid black;
+    border-radius: 5%;
+    background: #194141;
+    box-shadow: 10px 5px 15px black;
+    animation: ani 2s forwards;
+}
+.restorePasswordFormPopUp {
+    width: 450px;
+    height: 350px;
+    border: 3px solid black;
+    border-radius: 5%;
+    background: #194141;
+    box-shadow: 10px 5px 15px black;
+    animation: ani 2s forwards;
+}
+@keyframes ani {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
