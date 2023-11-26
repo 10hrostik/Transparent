@@ -1,4 +1,4 @@
-package com.api.repositories;
+package com.api.repositories.attachments;
 
 import com.api.entities.attachment.AttachmentUser;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;

@@ -8,4 +8,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Getter
 @Table(name = "groups")
 public class Group extends Room {
+    private Long userChatId;
+
+    private Boolean active;
 }

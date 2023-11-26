@@ -73,6 +73,7 @@ function RegisterForm(props) {
             body : JSON.stringify(registerData)
         }).then((response) => response.json())
             .then(user => {
+                if (user.error) throw new Error("Something went wrong");
                 sessionStorage.setItem('user', JSON.stringify(user))
                 sessionStorage.setItem('token', user.token)
                 props.setUser(user);

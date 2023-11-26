@@ -8,4 +8,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Getter
 @Table(name = "chats")
 public class Chat extends Room {
+    private Long userChatId;
+
+    private Boolean active;
 }
