@@ -6,6 +6,7 @@ import com.api.controllers.dto.users.EditUserProfileDto;
 import com.api.controllers.dto.users.ResponseUserDto;
 import com.api.entities.users.User;
 import com.api.services.users.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -17,16 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/secured/user")
 public class UserController {
-    private UserService userService;
+    private final UserService userService;
 
-    private JwtConfig jwtUtil;
-
-    public UserController(UserService userService, JwtConfig jwtUtil) {
-        this.userService = userService;
-        this.jwtUtil = jwtUtil;
-    }
+    private final JwtConfig jwtUtil;
 
     @PatchMapping(value = "/password", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseUserDto> editPassword(@RequestBody EditUserPasswordDto dto) {

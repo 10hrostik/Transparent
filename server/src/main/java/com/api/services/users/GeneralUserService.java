@@ -4,6 +4,8 @@ import com.api.entities.users.User;
 import com.api.repositories.CountryRepository;
 import com.api.repositories.UserRepository;
 import com.api.utils.Validator;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,18 +13,16 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDate;
 
 @Service
+@RequiredArgsConstructor
 public abstract class GeneralUserService {
-    protected UserRepository userRepository;
+    @Autowired
+    protected final UserRepository userRepository;
 
-    protected CountryRepository countryRepository;
+    @Autowired
+    protected final CountryRepository countryRepository;
 
-    protected PasswordEncoder passwordEncoder;
-
-    public GeneralUserService(UserRepository userRepository, CountryRepository countryRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.countryRepository = countryRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    @Autowired
+    protected final PasswordEncoder passwordEncoder;
 
     public Mono<UserDetails> findByUsername(String username) {
         Mono<User> user;

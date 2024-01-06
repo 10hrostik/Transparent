@@ -8,7 +8,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Data
 @Table(name = "group_users")
 @EqualsAndHashCode(callSuper = true)
-public class UserGroup extends Room {
+public class UserGroup extends UserRoom {
   @Column(value = "group_id")
   private Long groupId;
 

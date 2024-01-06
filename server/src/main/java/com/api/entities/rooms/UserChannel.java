@@ -8,7 +8,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Data
 @Table(name = "channels_users")
 @EqualsAndHashCode(callSuper = true)
-public class UserChannel extends Room {
+public class UserChannel extends UserRoom {
   @Column(value = "channel_id")
   private Long channelId;
 

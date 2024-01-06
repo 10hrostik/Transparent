@@ -9,7 +9,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Data
 @Table(name = "user_chat")
 @EqualsAndHashCode(callSuper = true)
-public class UserChat extends BaseEntity {
+public class UserChat extends UserRoom {
     @Column(value = "chat_id")
     private Long chatId;
 
