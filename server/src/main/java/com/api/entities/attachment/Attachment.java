@@ -1,7 +1,9 @@
 package com.api.entities.attachment;
 
+import com.api.entities.BaseEntity;
 import com.api.entities.user.User;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -13,15 +15,13 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @Table(name = "attachments")
-public class Attachment {
+@EqualsAndHashCode(callSuper = true)
+public class Attachment extends BaseEntity {
     public enum Type {
         IMAGE,
         GIF,
         DOCUMENT
     }
-
-    @Id
-    private Long id;
 
     @Column(value = "filename")
     private String filename;

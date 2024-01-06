@@ -1,20 +1,19 @@
 package com.api.entities.residence;
 
+import com.api.entities.BaseEntity;
 import com.api.entities.user.User;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.List;
 
-@Table(name = "countries")
 @Data
-public class Country {
-    @Id
-    private Integer id;
-
+@Table(name = "countries")
+@EqualsAndHashCode(callSuper = true)
+public class Country extends BaseEntity {
     @Column(value = "name")
     private String name;
 

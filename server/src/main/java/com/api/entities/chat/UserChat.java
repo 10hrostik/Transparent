@@ -1,16 +1,18 @@
 package com.api.entities.chat;
 
+import com.api.entities.BaseEntity;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
+import lombok.EqualsAndHashCode;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Data
 @Table(name = "user_chat")
-public class UserChat {
-    @Id
-    private Long id;
+@EqualsAndHashCode(callSuper = true)
+public class UserChat extends BaseEntity {
+    @Column(value = "room_id")
+    private Long roomId;
 
-    private Long chatId;
-
+    @Column(value = "user_id")
     private Long userId;
 }

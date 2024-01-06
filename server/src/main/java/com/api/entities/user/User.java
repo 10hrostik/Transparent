@@ -1,9 +1,10 @@
 package com.api.entities.user;
 
+import com.api.entities.BaseEntity;
 import com.api.entities.attachment.Attachment;
 import com.api.entities.residence.Country;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -18,10 +19,8 @@ import java.util.Set;
 
 @Data
 @Table(name = "users")
-public class User implements UserDetails {
-    @Id
-    private Long id;
-
+@EqualsAndHashCode(callSuper = true)
+public class User extends BaseEntity implements UserDetails {
     @Column(value = "username")
     private String username;
 

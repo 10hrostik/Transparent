@@ -1,14 +1,21 @@
 package com.api.entities.chat;
 
+import com.api.entities.BaseEntity;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.relational.core.mapping.Column;
 
-@Data
-public abstract class Room {
-    @Id
-    private Long id;
+import java.time.LocalDate;
 
+@Data
+@EqualsAndHashCode(callSuper = true)
+public abstract class Room extends BaseEntity {
     @Column(value = "name")
     protected String name;
+
+    @Column(value = "created_on")
+    protected LocalDate createdOn;
+
+    @Column(value = "created_by")
+    protected Long createdBy;
 }

@@ -1,5 +1,6 @@
 package com.launcher;
 
+import com.launcher.script.DatabaseConfigurer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -12,9 +13,10 @@ import org.springframework.web.reactive.config.EnableWebFlux;
 @EnableR2dbcRepositories("com.api.repositories")
 @ComponentScan(basePackages = {"com.api"})
 public class MessengerApplication {
+	private static DatabaseConfigurer sqlScripts = DatabaseConfigurer.getInstance();
 
 	public static void main(String[] args) {
+		sqlScripts.init();
 		SpringApplication.run(MessengerApplication.class, args);
 	}
-
 }
