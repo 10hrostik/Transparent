@@ -29,10 +29,6 @@ public class UserMapper {
         user.setPhone(dto.getNumber());
         user.setRegisterDate(LocalDate.now());
         user.setLoginDate(LocalDate.now());
-        user.setAccountNonExpired(true);
-        user.setCredentialsNonExpired(true);
-        user.setEnabled(true);
-        user.setAccountNonLocked(true);
         if (dto.getCredential() != null && Validator.isEmail(dto.getCredential())) {
             user.setEmail(dto.getCredential());
         } else {

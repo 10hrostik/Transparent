@@ -8,7 +8,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Data
-@Table(name = "attachment_user")
+@Table(name = "attachments_users")
 @EqualsAndHashCode(callSuper = true)
 public class AttachmentUser extends BaseEntity {
     @Column(value = "user_id")

@@ -1,13 +1,15 @@
 package com.api.entities.chat;
 
 import lombok.EqualsAndHashCode;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table(name = "groups")
 @EqualsAndHashCode(callSuper = true)
-
 public class Group extends Room {
-    private Long userChatId;
+    @Column(value = "user_group_id")
+    private Long userGroupId;
 
+    @Column(value = "active")
     private Boolean active;
 }

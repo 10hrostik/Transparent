@@ -33,7 +33,6 @@ public class DatabaseConfigurer {
   public void init() {
     loadProperties();
     createDatabase();
-    createFlywaySchema();
     createAuthorities();
   }
 
@@ -75,27 +74,11 @@ public class DatabaseConfigurer {
           GRANT ALL ON DATABASE transparent TO transparent_super_role;
           CREATE USER flyway_user NOSUPERUSER NOCREATEDB NOCREATEROLE LOGIN ENCRYPTED PASSWORD 'VwJkf4nHIpbl';
           GRANT ALL ON DATABASE transparent TO flyway_user;
-          GRANT ALL PRIVILEGES ON SCHEMA flyway TO flyway_user;
+          GRANT ALL PRIVILEGES ON DATABASE transparent TO flyway_user;
           CREATE ROLE transparent_service_role;
           GRANT CONNECT ON DATABASE transparent TO transparent_service_role;
           CREATE USER transparent_service NOSUPERUSER NOCREATEDB NOCREATEROLE LOGIN ENCRYPTED PASSWORD 'XfExc8ZTbsze';
           GRANT transparent_service_role TO transparent_service;
-          """;
-
-        Statement statement = connection.createStatement();
-        statement.execute(query);
-      }
-    } catch (SQLException e) {
-      log.error(e.toString());
-    }
-  }
-
-  private void createFlywaySchema() {
-    try (Connection connection = DriverManager.getConnection(connectionString + "transparent", superUser, superPassword)) {
-      if (checkIfFlywaySchemeNotExists(connection)) {
-        String query = """
-          CREATE SCHEMA flyway;
-          REVOKE ALL ON SCHEMA flyway FROM PUBLIC;
           """;
 
         Statement statement = connection.createStatement();
@@ -117,15 +100,6 @@ public class DatabaseConfigurer {
 
   private boolean checkIfDatabaseNotExists(Connection connection) throws SQLException {
     String query = "SELECT * FROM pg_database WHERE datname = 'transparent'";
-    Statement statement = connection.createStatement();
-    statement.execute(query);
-    ResultSet resultSet = statement.getResultSet();
-
-    return !resultSet.next();
-  }
-
-  private boolean checkIfFlywaySchemeNotExists(Connection connection) throws SQLException {
-    String query = "select * from information_schema.schemata where schema_name = 'flyway'";
     Statement statement = connection.createStatement();
     statement.execute(query);
     ResultSet resultSet = statement.getResultSet();

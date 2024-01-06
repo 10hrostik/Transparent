@@ -1,5 +1,6 @@
-CREATE SCHEMA transparent_service;
+CREATE SCHEMA IF NOT EXISTS transparent_service;
 GRANT USAGE ON SCHEMA transparent_service TO transparent_service_role;
+GRANT ALL PRIVILEGES ON SCHEMA transparent_service TO flyway_user;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA transparent_service TO transparent_service_role;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA transparent_service TO transparent_service;
