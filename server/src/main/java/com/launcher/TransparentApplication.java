@@ -12,11 +12,11 @@ import org.springframework.web.reactive.config.EnableWebFlux;
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 @EnableR2dbcRepositories("com.api.repositories")
 @ComponentScan(basePackages = {"com.api"})
-public class MessengerApplication {
+public class TransparentApplication {
 	private static DatabaseConfigurer sqlScripts = DatabaseConfigurer.getInstance();
 
 	public static void main(String[] args) {
 		sqlScripts.init();
-		SpringApplication.run(MessengerApplication.class, args);
+		SpringApplication.run(TransparentApplication.class, args);
 	}
 }
