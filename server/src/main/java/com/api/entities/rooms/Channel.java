@@ -1,4 +1,4 @@
-package com.api.entities.chat;
+package com.api.entities.rooms;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

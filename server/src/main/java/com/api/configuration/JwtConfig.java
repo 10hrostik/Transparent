@@ -1,12 +1,11 @@
 package com.api.configuration;
 
-import com.api.controllers.dto.user.ResponseUserDto;
-import com.api.entities.user.User;
+import com.api.controllers.dto.users.ResponseUserDto;
+import com.api.entities.users.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

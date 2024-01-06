@@ -1,6 +1,6 @@
 package com.api.repositories.chats;
 
-import com.api.entities.chat.Room;
+import com.api.entities.rooms.Room;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 

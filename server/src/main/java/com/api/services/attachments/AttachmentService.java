@@ -1,8 +1,8 @@
 package com.api.services.attachments;
 
-import com.api.controllers.dto.attachment.AttachmentDto;
-import com.api.entities.attachment.Attachment;
-import com.api.entities.attachment.AttachmentUser;
+import com.api.controllers.dto.attachments.AttachmentDto;
+import com.api.entities.attachments.Attachment;
+import com.api.entities.attachments.AttachmentUser;
 import com.api.repositories.attachments.AttachmentRepository;
 import com.api.repositories.attachments.AttachmentUserRepository;
 import lombok.RequiredArgsConstructor;

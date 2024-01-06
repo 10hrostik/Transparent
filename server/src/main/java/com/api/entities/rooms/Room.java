@@ -1,4 +1,4 @@
-package com.api.entities.chat;
+package com.api.entities.rooms;
 
 import com.api.entities.BaseEntity;
 import lombok.Data;

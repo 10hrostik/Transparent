@@ -1,4 +1,4 @@
-package com.api.controllers.dto.residence;
+package com.api.controllers.dto.residences;
 
 import com.api.entities.residence.Country;
 

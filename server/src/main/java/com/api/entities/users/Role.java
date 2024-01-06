@@ -1,4 +1,4 @@
-package com.api.entities.user;
+package com.api.entities.users;
 
 public enum Role {
     ROLE_USER,

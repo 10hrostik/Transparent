@@ -1,6 +1,6 @@
 package com.api.services.users;
 
-import com.api.entities.user.User;
+import com.api.entities.users.User;
 import com.api.repositories.CountryRepository;
 import com.api.repositories.UserRepository;
 import com.api.utils.Validator;

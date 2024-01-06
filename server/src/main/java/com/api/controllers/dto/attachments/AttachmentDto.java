@@ -1,4 +1,4 @@
-package com.api.controllers.dto.attachment;
+package com.api.controllers.dto.attachments;
 
 import lombok.Data;
 

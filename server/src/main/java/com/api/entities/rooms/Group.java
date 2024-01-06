@@ -1,4 +1,4 @@
-package com.api.entities.chat;
+package com.api.entities.rooms;
 
 import lombok.EqualsAndHashCode;
 import org.springframework.data.relational.core.mapping.Column;

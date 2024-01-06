@@ -1,10 +1,10 @@
 package com.api.controllers.users;
 
 import com.api.configuration.JwtConfig;
-import com.api.controllers.dto.user.EditUserPasswordDto;
-import com.api.controllers.dto.user.EditUserProfileDto;
-import com.api.controllers.dto.user.ResponseUserDto;
-import com.api.entities.user.User;
+import com.api.controllers.dto.users.EditUserPasswordDto;
+import com.api.controllers.dto.users.EditUserProfileDto;
+import com.api.controllers.dto.users.ResponseUserDto;
+import com.api.entities.users.User;
 import com.api.services.users.UserService;
 import org.springframework.http.*;
 import org.springframework.http.server.reactive.ServerHttpRequest;

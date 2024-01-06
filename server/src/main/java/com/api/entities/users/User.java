@@ -1,7 +1,7 @@
-package com.api.entities.user;
+package com.api.entities.users;
 
 import com.api.entities.BaseEntity;
-import com.api.entities.attachment.Attachment;
+import com.api.entities.attachments.Attachment;
 import com.api.entities.residence.Country;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

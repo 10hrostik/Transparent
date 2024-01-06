@@ -1,11 +1,10 @@
-package com.api.entities.attachment;
+package com.api.entities.attachments;
 
 import com.api.entities.BaseEntity;
-import com.api.entities.user.User;
+import com.api.entities.users.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;

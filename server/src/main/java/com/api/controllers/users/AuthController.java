@@ -1,9 +1,9 @@
 package com.api.controllers.users;
 
 import com.api.configuration.JwtConfig;
-import com.api.controllers.dto.user.EditUserPasswordDto;
-import com.api.controllers.dto.user.RegisterUserDto;
-import com.api.controllers.dto.user.ResponseUserDto;
+import com.api.controllers.dto.users.EditUserPasswordDto;
+import com.api.controllers.dto.users.RegisterUserDto;
+import com.api.controllers.dto.users.ResponseUserDto;
 import com.api.services.users.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

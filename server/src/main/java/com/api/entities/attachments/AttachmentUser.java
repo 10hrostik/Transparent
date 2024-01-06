@@ -1,4 +1,4 @@
-package com.api.entities.chat;
+package com.api.entities.attachments;
 
 import com.api.entities.BaseEntity;
 import lombok.Data;
@@ -7,12 +7,12 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Data
-@Table(name = "user_chat")
+@Table(name = "attachments_users")
 @EqualsAndHashCode(callSuper = true)
-public class UserChat extends BaseEntity {
-    @Column(value = "chat_id")
-    private Long chatId;
-
+public class AttachmentUser extends BaseEntity {
     @Column(value = "user_id")
     private Long userId;
+
+    @Column(value = "attachment_id")
+    private Long attachmentId;
 }

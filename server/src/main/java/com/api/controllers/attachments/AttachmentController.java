@@ -1,6 +1,6 @@
 package com.api.controllers.attachments;
 
-import com.api.controllers.dto.attachment.AttachmentDto;
+import com.api.controllers.dto.attachments.AttachmentDto;
 import com.api.services.attachments.AttachmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

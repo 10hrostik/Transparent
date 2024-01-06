@@ -1,6 +1,6 @@
-package com.api.controllers.dto.user;
+package com.api.controllers.dto.users;
 
-import com.api.controllers.dto.residence.CountryDto;
+import com.api.controllers.dto.residences.CountryDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;

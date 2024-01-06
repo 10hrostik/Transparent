@@ -1,4 +1,4 @@
-package com.api.controllers.dto.user;
+package com.api.controllers.dto.users;
 
 
 import lombok.Data;

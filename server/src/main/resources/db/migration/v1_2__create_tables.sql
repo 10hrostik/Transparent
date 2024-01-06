@@ -19,7 +19,7 @@ create table users(
     credentials_non_expired boolean not null,
     enabled boolean not null,
     role varchar(32) not null,
-    countryId bigint references countries(id)
+    country_id bigint references countries(id)
 );
 
 create table attachments(

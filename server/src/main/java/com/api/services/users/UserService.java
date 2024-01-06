@@ -1,9 +1,9 @@
 package com.api.services.users;
 
-import com.api.controllers.dto.user.EditUserProfileDto;
-import com.api.controllers.dto.user.ResponseUserDto;
-import com.api.controllers.dto.user.UserMapper;
-import com.api.entities.user.User;
+import com.api.controllers.dto.users.EditUserProfileDto;
+import com.api.controllers.dto.users.ResponseUserDto;
+import com.api.controllers.dto.users.UserMapper;
+import com.api.entities.users.User;
 import com.api.repositories.CountryRepository;
 import com.api.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;

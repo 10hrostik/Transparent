@@ -1,7 +1,7 @@
 package com.api.entities.residence;
 
 import com.api.entities.BaseEntity;
-import com.api.entities.user.User;
+import com.api.entities.users.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Transient;
