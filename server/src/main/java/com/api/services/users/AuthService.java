@@ -5,6 +5,7 @@ import com.api.controllers.dto.users.RegisterUserDto;
 import com.api.controllers.dto.users.ResponseUserDto;
 import com.api.controllers.dto.users.UserMapper;
 import com.api.entities.users.User;
+import com.api.exceptions.InvalidCredentialException;
 import com.api.repositories.CountryRepository;
 import com.api.repositories.UserRepository;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
@@ -53,7 +54,7 @@ public class AuthService extends GeneralUserService implements ReactiveUserDetai
 
             return convertLoginResponse(user);
         }
-        throw new IllegalArgumentException("Wrong input, check credentials!");
+        throw new InvalidCredentialException("Wrong input, check credentials!");
     }
 
     public Mono<Boolean> restore(EditUserPasswordDto passwordDto) throws IllegalArgumentException {
