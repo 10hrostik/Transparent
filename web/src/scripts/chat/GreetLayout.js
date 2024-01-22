@@ -34,11 +34,10 @@ function GreetLayout(props) {
     const toggleSideBar = () => {
         let sidebar = document.querySelector('.sideBar');
         let sidebarWidth = sidebar.offsetWidth;
-        if (sidebar.style.left === '0px') {
+        if (sidebar.style.left === '0px')
             sidebar.style.left = `-${sidebarWidth}px`;
-        } else {
+        else
             sidebar.style.left = '0px';
-        }
     }
 
     const refresh = (username) => {

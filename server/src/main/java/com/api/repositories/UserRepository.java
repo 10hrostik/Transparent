@@ -3,6 +3,7 @@ package com.api.repositories;
 import com.api.entities.users.User;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
@@ -18,7 +19,7 @@ public interface UserRepository extends R2dbcRepository<User, Long> {
     Mono<User> findByEmail(String email);
 
     @Query("SELECT * FROM users WHERE email = :email or username = :email and password = :password")
-    Mono<User> findByEmailAndPassword(String email, String password);
+    Mono<User> findByEmailAndPassword(@Param("email") String email, @Param("password") String password);
 
     @Query("UPDATE users SET password = :newPassword WHERE id = :id")
     Mono<User> updatePassword(String newPassword, Long id);

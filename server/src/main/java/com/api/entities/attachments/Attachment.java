@@ -16,11 +16,6 @@ import java.util.Set;
 @Table(name = "attachments")
 @EqualsAndHashCode(callSuper = true)
 public class Attachment extends BaseEntity {
-    public enum Type {
-        IMAGE,
-        GIF,
-        DOCUMENT
-    }
 
     @Column(value = "filename")
     private String filename;
@@ -32,15 +27,14 @@ public class Attachment extends BaseEntity {
     private String contentType;
 
     @Column(value = "attachment_type")
-    private Type attachmentType;
+    private AttachmentType attachmentType;
+
+    @Column(value = "main")
+    private Boolean main = false;
 
     @Transient
     private Set<User> users;
 
-    public Attachment(String filename, String url) {
-        this.filename = filename;
-        this.url = url;
-    }
 }
 
 

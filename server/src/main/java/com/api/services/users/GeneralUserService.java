@@ -1,5 +1,6 @@
 package com.api.services.users;
 
+import com.api.controllers.mappers.UserMapper;
 import com.api.entities.users.User;
 import com.api.repositories.CountryRepository;
 import com.api.repositories.UserRepository;
@@ -24,6 +25,9 @@ public abstract class GeneralUserService {
     @Autowired
     protected final PasswordEncoder passwordEncoder;
 
+    @Autowired
+    protected final UserMapper userMapper;
+
     public Mono<UserDetails> findByUsername(String username) {
         Mono<User> user;
         try {
@@ -31,7 +35,7 @@ public abstract class GeneralUserService {
             user = userRepository.findByPhone(number);
 
             return user.cast(UserDetails.class).defaultIfEmpty(new User());
-        } catch (NumberFormatException exception){
+        } catch (NumberFormatException exception) {
             if (Validator.isEmail(username)) {
                 user = userRepository.findByEmail(username);
             } else {

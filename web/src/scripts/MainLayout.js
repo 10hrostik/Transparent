@@ -8,11 +8,11 @@ function MainLayout() {
     const [layout, setLayout] = useState(null);
 
     useEffect(() => {
-        if (user) {
+        if (user)
             setLayout(<GreetLayout user = {user} setUser = {setUser}/>)
-        } else {
+        else
             setLayout(<Auth setUser = {setUser}/>)
-        }
+
     }, [user]);
 
 

@@ -1,51 +1,27 @@
-package com.launcher.script;
+package com.api.configuration;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import java.io.FileInputStream;
-import java.io.IOException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.sql.*;
-import java.util.Objects;
-import java.util.Properties;
 
 @Slf4j
+@Component
 public class DatabaseConfigurer {
+  @Value("${postgres.connection}")
   private String connectionString;
-
-  private Properties baseProperties;
-
-  private Properties currentProperties;
-
-  private static DatabaseConfigurer instance;
 
   private final String superUser = "postgres";
 
   private final String superPassword = "postgres";
 
-  private DatabaseConfigurer() {}
 
-  public static DatabaseConfigurer getInstance() {
-    if (instance == null) {
-      instance = new DatabaseConfigurer();
-    }
-    return instance;
-  }
-
+  @PostConstruct
   public void init() {
-    loadProperties();
     createDatabase();
     createAuthorities();
-  }
-
-  private void loadProperties() {
-    try {
-      baseProperties = getProperties("application.properties");
-      currentProperties = getProperties("application-" + baseProperties.getProperty("spring.profiles.active") + ".properties");
-      connectionString = currentProperties.getProperty("postgres.connection");
-    } catch (NullPointerException e) {
-      connectionString = baseProperties.getProperty("postgres.connection");
-    } catch (Exception e) {
-      log.error("Something went wrong\n" + e);
-    }
   }
 
   private void createDatabase() {
@@ -87,15 +63,6 @@ public class DatabaseConfigurer {
     } catch (SQLException e) {
       log.error(e.toString());
     }
-  }
-
-  private Properties getProperties(String filename) throws IOException {
-    String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("")).getPath();
-    String configPath = rootPath + filename;
-    Properties props = new Properties();
-    props.load(new FileInputStream(configPath));
-
-    return props;
   }
 
   private boolean checkIfDatabaseNotExists(Connection connection) throws SQLException {

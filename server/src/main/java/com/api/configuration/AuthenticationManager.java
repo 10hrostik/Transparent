@@ -12,7 +12,6 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class AuthenticationManager implements ReactiveAuthenticationManager {
@@ -33,7 +32,7 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
             List<List<Map<String, String>>> role = claims.get("role", List.class);
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
             for(List<Map<String, String>> str : role) {
-                authorities.add(new SimpleGrantedAuthority(str.get(0).get("authority")));
+                authorities.add(new SimpleGrantedAuthority(str.getFirst().get("authority")));
             }
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(

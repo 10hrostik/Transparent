@@ -3,7 +3,7 @@ package com.api.services.users;
 import com.api.controllers.dto.users.EditUserPasswordDto;
 import com.api.controllers.dto.users.RegisterUserDto;
 import com.api.controllers.dto.users.ResponseUserDto;
-import com.api.controllers.dto.users.UserMapper;
+import com.api.controllers.mappers.UserMapper;
 import com.api.entities.users.User;
 import com.api.exceptions.InvalidCredentialException;
 import com.api.repositories.CountryRepository;
@@ -18,8 +18,9 @@ import reactor.core.publisher.Mono;
 @Service
 @Transactional
 public class AuthService extends GeneralUserService implements ReactiveUserDetailsService {
-    public AuthService(UserRepository userRepository, CountryRepository countryRepository, PasswordEncoder passwordEncoder) {
-        super(userRepository, countryRepository, passwordEncoder);
+    public AuthService(UserRepository userRepository, CountryRepository countryRepository,
+                       PasswordEncoder passwordEncoder, UserMapper userMapper) {
+        super(userRepository, countryRepository, passwordEncoder, userMapper);
     }
 
     @Override
@@ -30,14 +31,14 @@ public class AuthService extends GeneralUserService implements ReactiveUserDetai
     public Mono<ResponseUserDto> register(RegisterUserDto userDto) {
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         return findByUsername(userDto.getCredential() != null ?
-                userDto.getCredential() : userDto.getNumber().toString()).cast(User.class)
+                userDto.getCredential() : userDto.getPhone().toString()).cast(User.class)
                 .flatMap(x -> {
                     if (x.getId() == null) {
-                        return userRepository.save(UserMapper.registerDtoToEntity(userDto));
+                        return userRepository.save(userMapper.registerDtoToEntity(userDto));
                     }
                     return Mono.empty();
                 })
-                .map(UserMapper::entityToResponseDto);
+                .map(userMapper::entityToResponseDto);
     }
 
     public Mono<ResponseUserDto> getUser(Object credential, String password) throws IllegalArgumentException {
@@ -67,17 +68,17 @@ public class AuthService extends GeneralUserService implements ReactiveUserDetai
                     }
                     return Mono.empty();
                 })
-                .map(x -> true);
+                .map(user -> true);
     }
 
     private Mono<ResponseUserDto> convertLoginResponse(Mono<User> user) {
-        return user.flatMap(x -> countryRepository.findById(x.getCountryId())
-                        .map(y -> {
-                            x.setCountry(y);
-                            return x;
+        return user.flatMap(member -> countryRepository.findById(member.getCountryId())
+                        .map(country -> {
+                            member.setCountry(country);
+                            return member;
                         })
                 )
-                .map(UserMapper::entityToResponseDto);
+                .map(userMapper::entityToResponseDto);
     }
 
     private Mono<User> getUserByPhone(Long phone) {
