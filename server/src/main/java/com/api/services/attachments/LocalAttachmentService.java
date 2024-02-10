@@ -1,6 +1,8 @@
 package com.api.services.attachments;
 
-import com.api.controllers.dto.attachments.AttachmentDto;
+import com.api.controllers.dto.attachments.UploadAttachmentDto;
+import com.api.controllers.mappers.AttachmentMapper;
+import com.api.entities.attachments.Attachment;
 import com.api.entities.attachments.AttachmentType;
 import com.api.entities.attachments.AttachmentUser;
 import com.api.repositories.attachments.AttachmentRepository;
@@ -8,72 +10,97 @@ import com.api.repositories.attachments.AttachmentUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
-@Service
 @Primary
 @RequiredArgsConstructor
-public class LocalAttachmentService implements AttachmentService {
+@Service
+public abstract class LocalAttachmentService implements AttachmentProvider {
     @Value("${attachments.dir}")
-    private String folderPath;
+    protected String folderPath;
 
-    private final AttachmentRepository attachmentRepository;
+    private final AttachmentMapper attachmentMapper;
 
-    private final AttachmentUserRepository attachmentUserRepository;
+    protected final AttachmentRepository attachmentRepository;
+
+    protected final AttachmentUserRepository attachmentUserRepository;
 
     @Override
-    public Flux<AttachmentDto> getUserPhotos(Long userId) {
-        Flux<AttachmentUser> attachmentUserFlux = attachmentUserRepository.findAttachmentUserByUserId(userId);
-        return attachmentUserFlux
-                .flatMap(attachmentUser -> attachmentRepository.findById(attachmentUser.getAttachmentId()))
-                .filter(attachment -> attachment.getAttachmentType().equals(AttachmentType.IMAGE))
-                .map(attachment -> new AttachmentDto(attachment.getId(), attachment.getUrl(), attachment.getContentType())
-            );
+    public Flux<Attachment> getUserAttachments(Long userId, AttachmentType attachmentType) {
+        return attachmentUserRepository.findAttachmentUserByUserId(userId)
+            .flatMap(attachmentUser -> attachmentRepository
+                .findAttachmentByIdAndAttachmentType(attachmentUser.getAttachmentId(), attachmentType));
     }
 
     @Override
-    public Mono<ResponseEntity<?>> getPhoto(Long id) {
-        return attachmentRepository.findById(id)
-                .publishOn(Schedulers.boundedElastic())
-                .map(photo -> {
-                    try {
-                        byte[] bytes = Files.readAllBytes(new File(folderPath + photo.getUrl()).toPath());
-                        if (photo.getContentType().equals("image/png")) {
-                            return ResponseEntity.status(HttpStatus.OK)
-                                    .contentType(MediaType.IMAGE_PNG)
-                                    .body(bytes);
-                        }
-                        if (photo.getContentType().equals("image/jpg") || photo.getContentType().equals("image/jpeg")) {
-                            return ResponseEntity.status(HttpStatus.OK)
-                                    .contentType(MediaType.IMAGE_JPEG)
-                                    .body(bytes);
-                        }
-                        return ResponseEntity.status(HttpStatus.OK)
-                                .contentType(MediaType.IMAGE_GIF)
-                                .body(bytes);
-                    } catch (IOException e) {
-                        return ResponseEntity.status(HttpStatus.OK)
-                                .contentType(MediaType.IMAGE_GIF)
-                                .body(null);
-                    }
-                }).defaultIfEmpty(ResponseEntity.status(HttpStatus.NO_CONTENT)
-                         .contentType(MediaType.IMAGE_GIF)
-                        .body(null));
+    public Flux<Attachment> getUserAttachments(Long userId) {
+        return attachmentUserRepository.findAttachmentUserByUserId(userId)
+            .flatMap(attachmentUser -> attachmentRepository.findById(attachmentUser.getAttachmentId()));
     }
 
     @Override
-    public void upload(MultipartFile file, Long userId, AttachmentType attachmentType) {
+    public Mono<Attachment> getAttachment(Long id) {
+        return attachmentRepository.findById(id);
+    }
 
+    @Override
+    public Mono<Attachment> upload(Mono<FilePart> filePart, Long userId, AttachmentType attachmentType) {
+        return filePart.flatMap(file -> this.uploadFile(file, userId, attachmentType));
+    }
+
+    @Override
+    public Flux<Attachment> getAttachments() {
+        return null;
+    }
+
+    @Override
+    public Flux<Attachment> upload(Flux<FilePart> fileParts, Long userId, AttachmentType attachmentType) {
+        return fileParts.flatMap(file -> this.uploadFile(file, userId, attachmentType));
+    }
+
+    private Mono<Attachment> saveTransaction(UploadAttachmentDto uploadAttachment) {
+        return Objects.equals(AttachmentType.IMAGE, uploadAttachment.getAttachmentType()) ?
+            attachmentRepository.hasMainAttachmentUserByUserId(uploadAttachment.getUserId())
+                .flatMap(value -> saveTransaction(uploadAttachment, false))
+                .switchIfEmpty(saveTransaction(uploadAttachment, true)) :
+            saveTransaction(uploadAttachment, false);
+    }
+
+    private Mono<Attachment> saveTransaction(UploadAttachmentDto uploadAttachment, boolean isMain) {
+        Attachment attachment = attachmentMapper.asAttachment(uploadAttachment.getFileName(), uploadAttachment.getAttachmentType(),
+            uploadAttachment.getUrl(), uploadAttachment.getContentType(), isMain, uploadAttachment.getUserId());
+
+        return attachmentRepository.save(attachment).map(this::saveTransaction);
+    }
+
+    private Attachment saveTransaction(Attachment attachment) {
+        AttachmentUser attachmentUser = attachmentMapper.asAttachmentUser(attachment);
+        attachmentUserRepository.save(attachmentUser).delaySubscription(Duration.of(1, ChronoUnit.MILLIS)).subscribe();
+        return attachment;
+    }
+
+    private Mono<Attachment> uploadFile(FilePart file, Long userId, AttachmentType attachmentType) {
+        String filename = file.filename();
+        File path = new File(folderPath, filename);
+        String contentType = Objects.requireNonNull(file.headers().get(HttpHeaders.CONTENT_TYPE)).getFirst();
+        UploadAttachmentDto uploadAttachmentDto = UploadAttachmentDto.builder()
+            .fileName(filename)
+            .userId(userId)
+            .attachmentType(attachmentType)
+            .contentType(contentType)
+            .url(folderPath + filename)
+            .build();
+
+        return file.transferTo(path)
+            .then(saveTransaction(uploadAttachmentDto));
     }
 }

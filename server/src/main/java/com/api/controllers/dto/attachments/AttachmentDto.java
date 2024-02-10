@@ -1,18 +1,21 @@
 package com.api.controllers.dto.attachments;
 
+import com.api.entities.attachments.AttachmentType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AttachmentDto {
     private long id;
 
-    private String url;
+    private String fileName;
 
-    private String imageType;
+    private AttachmentType attachmentType;
 
-    public AttachmentDto(long id, String url, String imageType) {
-        this.id = id;
-        this.url = url;
-        this.imageType = imageType;
-    }
+    private String contentType;
 }
