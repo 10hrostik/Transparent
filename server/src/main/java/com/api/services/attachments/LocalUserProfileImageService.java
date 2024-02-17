@@ -44,7 +44,7 @@ public class LocalUserProfileImageService extends LocalAttachmentService<UserPro
 
   @Override
   public Mono<ResponseEntity<byte[]>> getImage(long imageId, long userId) {
-    return repository.findByIdAndCreatedBy(imageId, userId).map(FileUtils::convertImage);
+    return repository.findByIdAndCreatedBy(imageId, userId).map(FileUtils::convertImage).defaultIfEmpty(ResponseEntity.noContent().build());
   }
 
   @Override
