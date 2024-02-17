@@ -3,17 +3,15 @@ package com.api.services.attachments;
 import com.api.controllers.dto.attachments.UploadAttachmentDto;
 import com.api.controllers.dto.attachments.UserProfileImageDto;
 import com.api.controllers.mappers.AttachmentMapper;
-import com.api.entities.attachments.AttachmentEntity;
 import com.api.entities.attachments.AttachmentType;
 import com.api.entities.attachments.UserProfileImage;
 import com.api.repositories.attachments.AttachmentRepository;
 import com.api.repositories.attachments.AttachmentUserRepository;
 import com.api.repositories.attachments.UserProfileImageRepository;
+import com.api.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
@@ -22,9 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 @Slf4j
 @Service
@@ -47,14 +43,14 @@ public class LocalUserProfileImageService extends LocalAttachmentService<UserPro
   }
 
   @Override
-  public Mono<ResponseEntity<?>> getUserImage(long userId) {
-    return null;
+  public Mono<ResponseEntity<byte[]>> getImage(long imageId, long userId) {
+    return repository.findByIdAndCreatedBy(imageId, userId).map(FileUtils::convertImage);
   }
 
   @Override
   @Transactional(readOnly = true)
   public Flux<UserProfileImageDto> getUserImages(long userId) {
-    return getUserAttachments(userId, AttachmentType.IMAGE)
+    return repository.findAllByCreatedBy(userId)
         .map(userProfileImage -> UserProfileImageDto.builder()
             .id(userProfileImage.getId())
             .filename(userProfileImage.getFilename())
@@ -67,7 +63,7 @@ public class LocalUserProfileImageService extends LocalAttachmentService<UserPro
   @Override
   @Transactional(readOnly = true)
   public Mono<ResponseEntity<byte[]>> getUserMainImage(long userId) {
-    return repository.findByMainIsTrueAndCreatedBy(userId).map(this::convertImage);
+    return repository.findByMainIsTrueAndCreatedBy(userId).map(FileUtils::convertImage);
   }
 
   @Override
@@ -98,27 +94,4 @@ public class LocalUserProfileImageService extends LocalAttachmentService<UserPro
         });
   }
 
-  private ResponseEntity<byte[]> convertImage(AttachmentEntity image) {
-    try {
-      byte[] bytes = Files.readAllBytes(new File(image.getUrl()).toPath());
-      String contentType = image.getContentType();
-      if (contentType.equals(MediaType.IMAGE_PNG_VALUE)) {
-        return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.IMAGE_PNG)
-            .body(bytes);
-      }
-      if (contentType.equals("image/jpg") || contentType.equals(MediaType.IMAGE_JPEG_VALUE)) {
-        return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.IMAGE_JPEG)
-            .body(bytes);
-      }
-      return ResponseEntity.status(HttpStatus.OK)
-          .contentType(MediaType.IMAGE_GIF)
-          .body(bytes);
-    } catch (IOException exception) {
-      log.error(exception.getMessage());
-    }
-
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-  }
 }

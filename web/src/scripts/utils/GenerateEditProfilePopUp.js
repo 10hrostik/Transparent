@@ -88,7 +88,7 @@ async function getPhotoLayout(header) {
 
 function uploadImage(form, userId) {
     const formData = new FormData(form);
-    const apiUrl = apiServer + "secured/attachments/photos/user/" + userId;
+    const apiUrl = apiServer + `secured/user/${userId}/image`;
 
     fetch(apiUrl, {
         headers: {
@@ -127,7 +127,7 @@ function getCredentialLayout() {
 }
 
 async function getMainPhoto(userId) {
-    return fetch(apiServer + "secured/attachments/media/user/" + userId, {
+    return fetch(apiServer + `secured/user/${userId}/image/main`, {
         headers: {
             'Authorization': 'Bearer ' + sessionStorage.getItem('token')
         },
@@ -140,7 +140,7 @@ async function getMainPhoto(userId) {
 }
 
 async function getPhotos (id) {
-    return await fetch(apiServer + "secured/attachments/media/user/" + id + "/all", {
+    return await fetch(apiServer + `secured/user/${id}/image/all`, {
         headers: {
             'Authorization': 'Bearer ' + sessionStorage.getItem('token')
         },

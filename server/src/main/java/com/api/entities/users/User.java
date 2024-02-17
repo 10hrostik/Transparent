@@ -1,7 +1,6 @@
 package com.api.entities.users;
 
 import com.api.entities.BaseEntity;
-import com.api.entities.attachments.UserProfileImage;
 import com.api.entities.residence.Country;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Table(name = "users")
@@ -68,9 +66,6 @@ public class User extends BaseEntity implements UserDetails {
 
     @Transient
     private Country country;
-
-    @Transient
-    private Set<UserProfileImage> attachments;
 
     public User () {
         accountNonExpired = true;

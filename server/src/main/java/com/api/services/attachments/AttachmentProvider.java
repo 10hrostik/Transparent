@@ -17,4 +17,5 @@ public interface AttachmentProvider <T> {
   Mono<T> upload(Mono<FilePart> file, Long userId, AttachmentType attachmentType, String dir);
 
   Flux<T> upload(Flux<FilePart> file, Long userId, AttachmentType attachmentType, String dir);
+
 }

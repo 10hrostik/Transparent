@@ -1,4 +1,4 @@
-package com.api.controllers.users;
+package com.api.controllers.attachments;
 
 import com.api.controllers.dto.attachments.UserProfileImageDto;
 import com.api.entities.attachments.UserProfileImage;
@@ -15,22 +15,27 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/secured/user/{id}/image")
 public class UserImageController {
 
-    private final MediaAttachmentProvider<UserProfileImage> imageService;
+    private final MediaAttachmentProvider<UserProfileImage> userProfileImageService;
 
     @GetMapping("/all")
     public Flux<UserProfileImageDto> getUserImages(@PathVariable Long id) {
-        return imageService.getUserImages(id);
+        return userProfileImageService.getUserImages(id);
     }
 
-    @GetMapping
-    public Mono<ResponseEntity<byte[]>> getUserImage(@PathVariable Long id) {
-        return imageService.getUserMainImage(id);
+    @GetMapping("/{imageId}")
+    public Mono<ResponseEntity<byte[]>> getUserImage(@PathVariable(name = "id") Long userId, @PathVariable Long imageId) {
+        return userProfileImageService.getImage(imageId, userId);
+    }
+
+    @GetMapping("/main")
+    public Mono<ResponseEntity<byte[]>> getUserMainImage(@PathVariable Long id) {
+        return userProfileImageService.getUserMainImage(id);
     }
 
     @PostMapping
     public Mono<ResponseEntity<UserProfileImageDto>> uploadUserImage(@RequestPart("image") Mono<FilePart> image, @PathVariable long id) {
         try {
-            return imageService.uploadUserImage(image, id);
+            return userProfileImageService.uploadUserImage(image, id);
         } catch (Exception e) {
             return Mono.error(e);
         }

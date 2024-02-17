@@ -2,6 +2,7 @@ package com.api.repositories.attachments;
 
 import com.api.entities.attachments.UserProfileImage;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
