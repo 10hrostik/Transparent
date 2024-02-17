@@ -4,6 +4,7 @@ import com.api.controllers.dto.attachments.UserProfileImageDto;
 import com.api.entities.attachments.UserProfileImage;
 import com.api.services.attachments.MediaAttachmentProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +34,7 @@ public class UserImageController {
     }
 
     @PostMapping
-    public Mono<ResponseEntity<byte[]>> uploadUserImage(@RequestPart("image") Mono<FilePart> image, @PathVariable long id) {
-        try {
-            return userProfileImageService.uploadUserImage(image, id);
-        } catch (Exception e) {
-            return Mono.error(e);
-        }
+    public Mono<ResponseEntity<byte[]>> uploadUserImage(@RequestPart("image") Mono<FilePart> image, @PathVariable Long id) {
+        return userProfileImageService.uploadUserImage(image, id);
     }
 }

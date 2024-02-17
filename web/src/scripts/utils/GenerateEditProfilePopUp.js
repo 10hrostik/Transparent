@@ -65,19 +65,9 @@ async function getPhotoLayout(header) {
     if (image == null) {
         photo.src = require('../../images/no-photo-profile.png');
         photo.style.marginLeft = "5px";
-        let fileForm = document.createElement('form');
-        fileForm.id = 'fileForm';
-        fileForm.encoding = 'multipart/form-data';
-        let fileInput = document.createElement('input');
-        fileInput.style.display = 'none';
-        fileInput.type = 'file';
-        fileInput.id = 'fileInput';
-        fileInput.name = "image";
-        fileInput.accept = 'image/*';
-        fileInput.onchange = () => uploadImage(fileForm, userId);
-        fileForm.appendChild(fileInput)
-        mainPhotoLayout.appendChild(fileForm);
-        mainPhotoLayout.onclick = () => document.getElementById('fileInput').click();
+        let imageForm = buildUploadImageForm(userId, photo);
+        mainPhotoLayout.appendChild(imageForm);
+        mainPhotoLayout.onclick = () => document.getElementById('imageInput').click();
     } else {
         photo.src = URL.createObjectURL(image);
     }
@@ -86,30 +76,50 @@ async function getPhotoLayout(header) {
     header.appendChild(photoLayout)
 }
 
-function uploadImage(form, userId) {
+function buildUploadImageForm(userId, photo) {
+    let imageForm = document.createElement('form');
+    imageForm.id = 'imageUploadForm';
+    imageForm.encoding = 'multipart/form-data';
+    buildUploadImageInput(imageForm, userId, photo);
+
+    return imageForm;
+}
+
+function buildUploadImageInput(imageForm, userId, photo) {
+    let imageInput = document.createElement('input');
+    imageInput.style.display = 'none';
+    imageInput.type = 'file';
+    imageInput.id = 'imageInput';
+    imageInput.name = "image";
+    imageInput.accept = 'image/*';
+    imageInput.onchange = () => uploadImage(imageForm, userId, photo);
+    imageForm.appendChild(imageInput);
+}
+
+function uploadImage(form, userId, photo) {
     const formData = new FormData(form);
     const apiUrl = apiServer + `secured/user/${userId}/image`;
 
     fetch(apiUrl, {
         headers: {
-            'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
-            'Content-Type': 'multipart/form-data'
+            'Authorization': 'Bearer ' + sessionStorage.getItem('token')
         },
         method: 'POST',
         body: formData,
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('API Response:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.blob();
+    })
+    .then(image => {
+        photo.src = URL.createObjectURL(image);
+        photo.style.marginLeft = "0px";
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 
 function getCredentialLayout() {
@@ -132,7 +142,8 @@ async function getMainPhoto(userId) {
             'Authorization': 'Bearer ' + sessionStorage.getItem('token')
         },
         method: 'GET'
-    }).then(response => {
+    })
+    .then(response => {
         if (response.status === 204) return null;
 
         return response.blob();
@@ -146,7 +157,7 @@ async function getPhotos (id) {
         },
         method: 'GET'
     })
-        .then(response => response.json());
+    .then(response => response.json());
 }
 
 export default generateUserPopUp;
