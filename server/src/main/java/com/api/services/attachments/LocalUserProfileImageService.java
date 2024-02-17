@@ -49,6 +49,12 @@ public class LocalUserProfileImageService extends LocalAttachmentService<UserPro
 
   @Override
   @Transactional(readOnly = true)
+  public Mono<ResponseEntity<byte[]>> getUserMainImage(long userId) {
+    return repository.findByMainIsTrueAndCreatedBy(userId).map(FileUtils::convertImage).defaultIfEmpty(ResponseEntity.noContent().build());
+  }
+
+  @Override
+  @Transactional(readOnly = true)
   public Flux<UserProfileImageDto> getUserImages(long userId) {
     return repository.findAllByCreatedBy(userId)
         .map(userProfileImage -> UserProfileImageDto.builder()
@@ -58,12 +64,6 @@ public class LocalUserProfileImageService extends LocalAttachmentService<UserPro
             .contentType(userProfileImage.getContentType())
             .main(userProfileImage.getMain())
             .build());
-  }
-
-  @Override
-  @Transactional(readOnly = true)
-  public Mono<ResponseEntity<byte[]>> getUserMainImage(long userId) {
-    return repository.findByMainIsTrueAndCreatedBy(userId).map(FileUtils::convertImage);
   }
 
   @Override
