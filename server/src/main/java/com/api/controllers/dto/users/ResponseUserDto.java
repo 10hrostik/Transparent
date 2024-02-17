@@ -23,6 +23,8 @@ public class ResponseUserDto extends InitUserDto {
 
     private Date loginDate;
 
+    private String description;
+
     private CountryDto country;
 
     private String token;

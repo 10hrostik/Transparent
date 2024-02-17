@@ -36,11 +36,10 @@ public abstract class GeneralUserService {
 
             return user.cast(UserDetails.class).defaultIfEmpty(new User());
         } catch (NumberFormatException exception) {
-            if (Validator.isEmail(username)) {
+            if (Validator.isEmail(username))
                 user = userRepository.findByEmail(username);
-            } else {
+            else
                 user =  userRepository.findByUsername(username);
-            }
 
             return user.cast(UserDetails.class).defaultIfEmpty(new User());
         }

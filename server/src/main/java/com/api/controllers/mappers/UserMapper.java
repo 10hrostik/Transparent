@@ -20,18 +20,18 @@ public abstract class UserMapper {
     @Mapping(target = "phone", source = "user", qualifiedByName = "formatPhoneNumber")
     @Mapping(target = "roles", expression = "java(user.getAuthorities())")
     @Mapping(target = "credential", source = "username")
-    public abstract ResponseUserDto entityToResponseDto(User user);
+    public abstract ResponseUserDto asResponseDto(User user);
 
     @Mapping(target = "phone", source = "phoneNumber")
     @Mapping(target = "username", source = "credential")
     @Mapping(target = "country", ignore = true)
-    public abstract User editUser(EditUserProfileDto userProfileDto, @MappingTarget User user);
+    public abstract User asEditedUser(EditUserProfileDto userProfileDto, @MappingTarget User user);
 
     @Mapping(target = "email", source = "dto", qualifiedByName = "email")
     @Mapping(target = "username", source = "dto", qualifiedByName = "username")
     @Mapping(target = "registerDate", expression = "java(LocalDate.now())")
     @Mapping(target = "loginDate", expression = "java(LocalDate.now())")
-    public abstract User registerDtoToEntity(RegisterUserDto dto);
+    public abstract User asRegisteredUser(RegisterUserDto dto);
 
     @Named("email")
     protected String getEmail(RegisterUserDto dto) {

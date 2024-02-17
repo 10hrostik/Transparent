@@ -6,6 +6,7 @@ import com.api.controllers.mappers.UserMapper;
 import com.api.entities.users.User;
 import com.api.repositories.CountryRepository;
 import com.api.repositories.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -22,15 +23,11 @@ public class UserService extends GeneralUserService {
         userMono.flatMap(user -> userRepository
                 .updatePassword(passwordEncoder.encode(newPassword), user.getId())).subscribe();
 
-        return userMono.map(userMapper::entityToResponseDto);
+        return userMono.map(userMapper::asResponseDto);
     }
 
     public Mono<ResponseUserDto> editUser(EditUserProfileDto userProfileDto) {
-        return userRepository.findById(userProfileDto.getId()).flatMap(user -> {
-            if (user.getId() != null) {
-                return userRepository.save(userMapper.editUser(userProfileDto, user));
-            }
-            return Mono.empty();
-        }).map(userMapper::entityToResponseDto);
+        return userRepository.findById(userProfileDto.getId())
+            .flatMap(user -> userRepository.save(userMapper.asEditedUser(userProfileDto, user))).map(userMapper::asResponseDto);
     }
 }

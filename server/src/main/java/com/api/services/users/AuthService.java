@@ -32,13 +32,8 @@ public class AuthService extends GeneralUserService implements ReactiveUserDetai
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         return findByUsername(userDto.getCredential() != null ?
                 userDto.getCredential() : userDto.getPhone().toString()).cast(User.class)
-                .flatMap(user -> {
-                    if (user.getId() == null) {
-                        return userRepository.save(userMapper.registerDtoToEntity(userDto));
-                    }
-                    return Mono.empty();
-                })
-                .map(userMapper::entityToResponseDto);
+                .flatMap(user -> userRepository.save(userMapper.asRegisteredUser(userDto)))
+                .map(userMapper::asResponseDto);
     }
 
     public Mono<ResponseUserDto> getUser(Object credential, String password) throws IllegalArgumentException {
@@ -62,23 +57,19 @@ public class AuthService extends GeneralUserService implements ReactiveUserDetai
         passwordDto.setNewPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
         return findByUsername(passwordDto.getCredential()).cast(User.class)
                 .flatMap(user -> {
-                    if (user.getId() != null) {
-                        user.setPassword(passwordDto.getNewPassword());
-                        return userRepository.save(user);
-                    }
-                    return Mono.empty();
+                    user.setPassword(passwordDto.getNewPassword());
+                    return userRepository.save(user);
                 })
                 .map(user -> true);
     }
 
     private Mono<ResponseUserDto> convertLoginResponse(Mono<User> user) {
         return user.flatMap(member -> countryRepository.findById(member.getCountryId())
-                        .map(country -> {
-                            member.setCountry(country);
-                            return member;
-                        })
-                )
-                .map(userMapper::entityToResponseDto);
+                .map(country -> {
+                    member.setCountry(country);
+                    return member;
+                }))
+                .map(userMapper::asResponseDto);
     }
 
     private Mono<User> getUserByPhone(Long phone) {
