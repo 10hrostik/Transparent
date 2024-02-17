@@ -29,17 +29,17 @@ public class WebSecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity) {
         httpSecurity
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
-                .logout(ServerHttpSecurity.LogoutSpec::disable)
-                .authorizeExchange(exchanges -> exchanges
-                       .pathMatchers("/api/public/**").permitAll()
-                        .anyExchange().authenticated()
-                )
-                .cors(corsSpec -> corsSpec.configurationSource(corsConfigurationSource()))
-                .authenticationManager(authenticationManager)
-                .securityContextRepository(contextRepository)
-                .httpBasic(withDefaults());
+            .csrf(ServerHttpSecurity.CsrfSpec::disable)
+            .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+            .logout(ServerHttpSecurity.LogoutSpec::disable)
+            .authorizeExchange(exchanges -> exchanges
+                .pathMatchers("/public/**").permitAll()
+                .anyExchange().authenticated()
+            )
+            .cors(corsSpec -> corsSpec.configurationSource(corsConfigurationSource()))
+            .authenticationManager(authenticationManager)
+            .securityContextRepository(contextRepository)
+            .httpBasic(withDefaults());
 
         return httpSecurity.build();
     }

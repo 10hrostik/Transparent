@@ -4,7 +4,6 @@ import com.api.controllers.dto.attachments.UserProfileImageDto;
 import com.api.entities.attachments.UserProfileImage;
 import com.api.services.attachments.MediaAttachmentProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
