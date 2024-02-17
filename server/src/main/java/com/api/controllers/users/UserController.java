@@ -19,7 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/secured/user")
+@RequestMapping("/secured/user")
 public class UserController {
     private final UserService userService;
 

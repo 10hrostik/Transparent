@@ -12,4 +12,5 @@ public class UploadAttachmentDto extends AttachmentDto {
   private String url;
 
   private long userId;
+
 }

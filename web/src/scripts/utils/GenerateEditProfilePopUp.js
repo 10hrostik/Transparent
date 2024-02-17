@@ -127,7 +127,7 @@ function getCredentialLayout() {
 }
 
 async function getMainPhoto(userId) {
-    return fetch(apiServer + "secured/attachments/photos/user/" + userId, {
+    return fetch(apiServer + "secured/attachments/media/user/" + userId, {
         headers: {
             'Authorization': 'Bearer ' + sessionStorage.getItem('token')
         },
@@ -140,7 +140,7 @@ async function getMainPhoto(userId) {
 }
 
 async function getPhotos (id) {
-    return await fetch(apiServer + "secured/attachments/photos/user/" + id + "/all", {
+    return await fetch(apiServer + "secured/attachments/media/user/" + id + "/all", {
         headers: {
             'Authorization': 'Bearer ' + sessionStorage.getItem('token')
         },

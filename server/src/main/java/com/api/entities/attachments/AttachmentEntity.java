@@ -4,13 +4,14 @@ import com.api.entities.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
+
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public abstract class Attachment extends BaseEntity {
+public abstract class AttachmentEntity extends BaseEntity {
 
     @Column(value = "filename")
     private String filename;
@@ -24,11 +25,11 @@ public abstract class Attachment extends BaseEntity {
     @Column(value = "attachment_type")
     private AttachmentType attachmentType;
 
-    @Column(value = "main")
-    private Boolean main = false;
+    @Column(value = "created_by")
+    private long createdBy;
 
-    @Transient
-    private Long userId;
+    @Column(value = "created_on")
+    private LocalDate createdOn;
 
 }
 

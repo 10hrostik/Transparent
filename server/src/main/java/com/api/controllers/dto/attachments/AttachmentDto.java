@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 public class AttachmentDto {
     private long id;
 
-    private String fileName;
+    private String filename;
 
     private AttachmentType attachmentType;
 

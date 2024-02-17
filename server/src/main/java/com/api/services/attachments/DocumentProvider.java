@@ -1,4 +1,6 @@
 package com.api.services.attachments;
 
-public interface DocumentProvider extends AttachmentProvider {
+import com.api.entities.attachments.DocumentAttachment;
+
+public interface DocumentProvider extends AttachmentProvider<DocumentAttachment> {
 }

@@ -1,7 +1,7 @@
 package com.api.entities.users;
 
 import com.api.entities.BaseEntity;
-import com.api.entities.attachments.Attachment;
+import com.api.entities.attachments.UserProfileImage;
 import com.api.entities.residence.Country;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -63,11 +63,14 @@ public class User extends BaseEntity implements UserDetails {
     @Column(value = "country_id")
     private Integer countryId;
 
+    @Column(value = "description")
+    private String description;
+
     @Transient
     private Country country;
 
     @Transient
-    private Set<Attachment> attachments;
+    private Set<UserProfileImage> attachments;
 
     public User () {
         accountNonExpired = true;
@@ -101,4 +104,5 @@ public class User extends BaseEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
+
 }

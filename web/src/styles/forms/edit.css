@@ -22,6 +22,7 @@
 .mainUserPhoto {
     width: 115px;
     height: 115px;
+    border-radius: 50%;
 }
 .editCredentialContainer {
     height: 100%;

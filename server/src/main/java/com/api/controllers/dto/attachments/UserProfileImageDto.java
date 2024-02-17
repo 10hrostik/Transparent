@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class ImageDto extends AttachmentDto {
+public class UserProfileImageDto extends AttachmentDto {
 
   private boolean main;
 
