@@ -6,16 +6,16 @@ import org.springframework.http.codec.multipart.FilePart;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface AttachmentProvider {
-  Flux<Attachment> getUserAttachments(Long userId);
+public interface AttachmentProvider <T extends Attachment> {
+  Flux<T> getUserAttachments(Long userId);
 
-  Flux<Attachment> getAttachments();
+  Flux<T> getAttachments();
 
-  Flux<Attachment> getUserAttachments(Long userId, AttachmentType attachmentType);
+  Flux<T> getUserAttachments(Long userId, AttachmentType attachmentType);
 
-  Mono<Attachment> getAttachment(Long id);
+  Mono<T> getAttachment(Long id);
 
-  Mono<Attachment> upload(Mono<FilePart> file, Long userId, AttachmentType attachmentType);
+  Mono<T> upload(Mono<FilePart> file, Long userId, AttachmentType attachmentType, String dir, boolean isMain);
 
-  Flux<Attachment> upload(Flux<FilePart> file, Long userId, AttachmentType attachmentType);
+  Flux<T> upload(Flux<FilePart> file, Long userId, AttachmentType attachmentType, String dir, boolean isMain);
 }

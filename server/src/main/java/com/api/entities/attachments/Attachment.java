@@ -6,13 +6,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 @Data
 @NoArgsConstructor
-@Table(name = "attachments")
 @EqualsAndHashCode(callSuper = true)
-public class Attachment extends BaseEntity {
+public abstract class Attachment extends BaseEntity {
 
     @Column(value = "filename")
     private String filename;
