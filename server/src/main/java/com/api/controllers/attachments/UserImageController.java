@@ -33,7 +33,7 @@ public class UserImageController {
     }
 
     @PostMapping
-    public Mono<ResponseEntity<UserProfileImageDto>> uploadUserImage(@RequestPart("image") Mono<FilePart> image, @PathVariable long id) {
+    public Mono<ResponseEntity<byte[]>> uploadUserImage(@RequestPart("image") Mono<FilePart> image, @PathVariable long id) {
         try {
             return userProfileImageService.uploadUserImage(image, id);
         } catch (Exception e) {

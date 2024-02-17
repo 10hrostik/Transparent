@@ -38,7 +38,7 @@ public class LocalUserProfileImageService extends LocalAttachmentService<UserPro
 
   @Override
   @Transactional(propagation = Propagation.REQUIRED)
-  public Mono<ResponseEntity<UserProfileImageDto>> uploadUserImage(Mono<FilePart> file, long userId) {
+  public Mono<ResponseEntity<byte[]>> uploadUserImage(Mono<FilePart> file, long userId) {
     return upload(file, userId).onErrorReturn(IOException.class, ResponseEntity.internalServerError().build());
   }
 
@@ -79,19 +79,8 @@ public class LocalUserProfileImageService extends LocalAttachmentService<UserPro
     return repository;
   }
 
-  private Mono<ResponseEntity<UserProfileImageDto>> upload(Mono<FilePart> file, long userId) {
-    return upload(file, userId, AttachmentType.IMAGE,  userProfileImageDir + userId + "/")
-        .map(userProfileImage -> {
-          UserProfileImageDto userProfileImageDto = UserProfileImageDto.builder()
-              .id(userProfileImage.getId())
-              .contentType(userProfileImage.getContentType())
-              .main(userProfileImage.getMain())
-              .attachmentType(userProfileImage.getAttachmentType())
-              .filename(userProfileImage.getFilename())
-              .build();
-
-          return ResponseEntity.ok(userProfileImageDto);
-        });
+  private Mono<ResponseEntity<byte[]>> upload(Mono<FilePart> file, long userId) {
+    return upload(file, userId, AttachmentType.IMAGE,  userProfileImageDir + userId + "/").map(FileUtils::convertImage);
   }
 
 }

@@ -8,7 +8,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface MediaAttachmentProvider<T extends MediaAttachment> extends AttachmentProvider<T> {
-  Mono<ResponseEntity<UserProfileImageDto>> uploadUserImage(Mono<FilePart> file, long userId);
+  Mono<ResponseEntity<byte[]>> uploadUserImage(Mono<FilePart> file, long userId);
 
   Mono<ResponseEntity<byte[]>> getImage(long imageId, long userId);
 
