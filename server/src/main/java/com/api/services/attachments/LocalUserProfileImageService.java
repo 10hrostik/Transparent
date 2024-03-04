@@ -10,7 +10,6 @@ import com.api.repositories.attachments.AttachmentUserRepository;
 import com.api.repositories.attachments.UserProfileImageRepository;
 import com.api.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
@@ -26,14 +25,14 @@ import java.io.IOException;
 @Service
 public class LocalUserProfileImageService extends LocalAttachmentService<UserProfileImage> implements MediaAttachmentProvider<UserProfileImage> {
 
+  private final UserProfileImageRepository repository;
+
   @Value("${user.profile.image.dir}")
   private String userProfileImageDir;
 
-  @Autowired
-  private UserProfileImageRepository repository;
-
-  public LocalUserProfileImageService(AttachmentUserRepository attachmentUserRepository, AttachmentMapper attachmentMapper) {
+  public LocalUserProfileImageService(AttachmentUserRepository attachmentUserRepository, AttachmentMapper attachmentMapper, UserProfileImageRepository repository) {
     super(attachmentMapper, attachmentUserRepository);
+    this.repository = repository;
   }
 
   @Override
@@ -57,13 +56,13 @@ public class LocalUserProfileImageService extends LocalAttachmentService<UserPro
   @Transactional(readOnly = true)
   public Flux<UserProfileImageDto> getUserImages(long userId) {
     return repository.findAllByCreatedBy(userId)
-        .map(userProfileImage -> UserProfileImageDto.builder()
-            .id(userProfileImage.getId())
-            .filename(userProfileImage.getFilename())
-            .attachmentType(userProfileImage.getAttachmentType())
-            .contentType(userProfileImage.getContentType())
-            .main(userProfileImage.getMain())
-            .build());
+     .map(userProfileImage -> UserProfileImageDto.builder()
+      .id(userProfileImage.getId())
+      .filename(userProfileImage.getFilename())
+      .attachmentType(userProfileImage.getAttachmentType())
+      .contentType(userProfileImage.getContentType())
+      .main(userProfileImage.getMain())
+      .build());
   }
 
   @Override
@@ -80,7 +79,6 @@ public class LocalUserProfileImageService extends LocalAttachmentService<UserPro
   }
 
   private Mono<ResponseEntity<byte[]>> upload(Mono<FilePart> file, long userId) {
-    return upload(file, userId, AttachmentType.IMAGE,  userProfileImageDir + userId + "/").map(FileUtils::convertImage);
+    return upload(file, userId, AttachmentType.IMAGE, userProfileImageDir + userId + "/").map(FileUtils::convertImage);
   }
-
 }

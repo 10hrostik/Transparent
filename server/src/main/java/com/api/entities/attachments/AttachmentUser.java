@@ -10,9 +10,9 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table(name = "attachments_users")
 @EqualsAndHashCode(callSuper = true)
 public class AttachmentUser extends BaseEntity {
-    @Column(value = "user_id")
-    private Long userId;
+  @Column(value = "user_id")
+  private Long userId;
 
-    @Column(value = "attachment_id")
-    private Long attachmentId;
+  @Column(value = "attachment_id")
+  private Long attachmentId;
 }

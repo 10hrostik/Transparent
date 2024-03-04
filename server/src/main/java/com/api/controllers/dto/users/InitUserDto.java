@@ -1,11 +1,12 @@
 package com.api.controllers.dto.users;
 
-
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class InitUserDto {
-    private String credential;
+  @NotNull
+  private String credential;
 
-    private String password;
+  private String password;
 }

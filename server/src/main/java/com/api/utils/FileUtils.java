@@ -26,17 +26,17 @@ public class FileUtils {
       String contentType = image.getContentType();
       if (contentType.equals(MediaType.IMAGE_PNG_VALUE)) {
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.IMAGE_PNG)
-            .body(bytes);
+         .contentType(MediaType.IMAGE_PNG)
+         .body(bytes);
       }
       if (contentType.equals("image/jpg") || contentType.equals(MediaType.IMAGE_JPEG_VALUE)) {
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.IMAGE_JPEG)
-            .body(bytes);
+         .contentType(MediaType.IMAGE_JPEG)
+         .body(bytes);
       }
       return ResponseEntity.status(HttpStatus.OK)
-          .contentType(MediaType.IMAGE_GIF)
-          .body(bytes);
+       .contentType(MediaType.IMAGE_GIF)
+       .body(bytes);
     } catch (IOException exception) {
       log.error(exception.getMessage());
     }

@@ -4,23 +4,23 @@ import '../styles/MainLayout.css'
 import GreetLayout from "./chat/GreetLayout";
 
 function MainLayout() {
-    const [user, setUser] = useState(sessionStorage.getItem('user'));
-    const [layout, setLayout] = useState(null);
+  const [user, setUser] = useState(sessionStorage.getItem('user'));
+  const [layout, setLayout] = useState(null);
 
-    useEffect(() => {
-        if (user)
-            setLayout(<GreetLayout user = {user} setUser = {setUser}/>)
-        else
-            setLayout(<Auth setUser = {setUser}/>)
+  useEffect(() => {
+    if (user)
+      setLayout(<GreetLayout user={user} setUser={setUser}/>)
+    else
+      setLayout(<Auth setUser={setUser}/>)
 
-    }, [user]);
+  }, [user]);
 
 
-    return (
-        <div id={'mainLayout'} className={'mainLayout'}>
-            {layout}
-        </div>
-    )
+  return (
+      <div id={'mainLayout'} className={'mainLayout'}>
+        {layout}
+      </div>
+  )
 }
 
 export default MainLayout;

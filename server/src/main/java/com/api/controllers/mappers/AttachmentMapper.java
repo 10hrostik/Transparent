@@ -9,16 +9,14 @@ import org.mapstruct.MappingTarget;
 
 import java.time.LocalDate;
 
-@Mapper(componentModel = "spring", imports = { LocalDate.class })
+@Mapper(componentModel = "spring", imports = {LocalDate.class})
 public abstract class AttachmentMapper {
+  @Mapping(target = "createdBy", source = "uploadAttachmentDto.userId")
+  @Mapping(target = "createdOn", expression = "java(LocalDate.now())")
+  @Mapping(target = "id", ignore = true)
+  public abstract AttachmentEntity asAttachment(@MappingTarget AttachmentEntity attachment, UploadAttachmentDto uploadAttachmentDto);
 
-   @Mapping(target = "createdBy", source = "uploadAttachmentDto.userId")
-   @Mapping(target = "createdOn", expression = "java(LocalDate.now())")
-   @Mapping(target = "id", ignore = true)
-   public abstract AttachmentEntity asAttachment(@MappingTarget AttachmentEntity attachment, UploadAttachmentDto uploadAttachmentDto);
-
-   @Mapping(target = "attachmentId", source = "attachment.id")
-   @Mapping(target = "id", ignore = true)
-   public abstract AttachmentUser asAttachmentUser(AttachmentEntity attachment);
-
+  @Mapping(target = "attachmentId", source = "attachment.id")
+  @Mapping(target = "id", ignore = true)
+  public abstract AttachmentUser asAttachmentUser(AttachmentEntity attachment);
 }

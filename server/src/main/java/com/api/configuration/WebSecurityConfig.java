@@ -20,40 +20,40 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 public class WebSecurityConfig {
-    @Autowired
-    private SecurityContextRepository contextRepository;
+  @Autowired
+  private SecurityContextRepository contextRepository;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+  @Autowired
+  private AuthenticationManager authenticationManager;
 
-    @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity) {
-        httpSecurity
-            .csrf(ServerHttpSecurity.CsrfSpec::disable)
-            .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
-            .logout(ServerHttpSecurity.LogoutSpec::disable)
-            .authorizeExchange(exchanges -> exchanges
-                .pathMatchers("/public/**").permitAll()
-                .anyExchange().authenticated()
-            )
-            .cors(corsSpec -> corsSpec.configurationSource(corsConfigurationSource()))
-            .authenticationManager(authenticationManager)
-            .securityContextRepository(contextRepository)
-            .httpBasic(withDefaults());
+  @Bean
+  public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity) {
+    httpSecurity
+     .csrf(ServerHttpSecurity.CsrfSpec::disable)
+     .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+     .logout(ServerHttpSecurity.LogoutSpec::disable)
+     .authorizeExchange(exchanges -> exchanges
+      .pathMatchers("/public/**").permitAll()
+      .anyExchange().authenticated()
+     )
+     .cors(corsSpec -> corsSpec.configurationSource(corsConfigurationSource()))
+     .authenticationManager(authenticationManager)
+     .securityContextRepository(contextRepository)
+     .httpBasic(withDefaults());
 
-        return httpSecurity.build();
-    }
+    return httpSecurity.build();
+  }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(Arrays.asList("Accept", "Content-Type", "Authorization"));
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE"));
+    configuration.setAllowedHeaders(Arrays.asList("Accept", "Content-Type", "Authorization"));
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
 
-        return source;
-    }
+    return source;
+  }
 }

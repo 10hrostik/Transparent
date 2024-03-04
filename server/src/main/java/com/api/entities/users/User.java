@@ -19,85 +19,88 @@ import java.util.List;
 @Table(name = "users")
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity implements UserDetails {
-    @Column(value = "username")
-    private String username;
+  @Column(value = "username")
+  private String username;
 
-    @Column(value = "password")
-    private String password;
+  @Column(value = "password")
+  private String password;
 
-    @Column(value = "email")
-    private String email;
+  @Column(value = "email")
+  private String email;
 
-    @Column(value = "name")
-    private String name;
+  @Column(value = "name")
+  private String name;
 
-    @Column(value = "surname")
-    private String surname;
+  @Column(value = "surname")
+  private String surname;
 
-    @Column(value = "phone")
-    private Long phone;
+  @Column(value = "phone")
+  private String phone;
 
-    @Column(value = "register_date")
-    private LocalDate registerDate;
+  @Column(value = "register_date")
+  private LocalDate registerDate;
 
-    @Column(value = "login_date")
-    private LocalDate loginDate;
+  @Column(value = "login_date")
+  private LocalDate loginDate;
 
-    @Column(value = "account_non_expired")
-    private Boolean accountNonExpired;
+  @Column(value = "account_non_expired")
+  private Boolean accountNonExpired;
 
-    @Column(value = "account_non_locked")
-    private Boolean accountNonLocked;
+  @Column(value = "account_non_locked")
+  private Boolean accountNonLocked;
 
-    @Column(value = "credentials_non_expired")
-    private Boolean credentialsNonExpired;
+  @Column(value = "credentials_non_expired")
+  private Boolean credentialsNonExpired;
 
-    @Column(value = "enabled")
-    private Boolean enabled;
+  @Column(value = "enabled")
+  private Boolean enabled;
 
-    @Column(value = "role")
-    private Role role;
+  @Column(value = "role")
+  private Role role;
 
-    @Column(value = "country_id")
-    private Integer countryId;
+  @Column(value = "country_id")
+  private Long countryId;
 
-    @Column(value = "description")
-    private String description;
+  @Column(value = "description")
+  private String description;
 
-    @Transient
-    private Country country;
+  @Transient
+  private Country country;
 
-    public User () {
-        accountNonExpired = true;
-        accountNonLocked = true;
-        credentialsNonExpired = true;
-        enabled = true;
-        role = Role.ROLE_USER;
-    }
+  @Transient
+  private byte[] mainPhoto;
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return accountNonLocked;
-    }
+  public User() {
+    accountNonExpired = true;
+    accountNonLocked = true;
+    credentialsNonExpired = true;
+    enabled = true;
+    role = Role.ROLE_USER;
+  }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return accountNonLocked;
+  }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
+  @Override
+  public boolean isAccountNonLocked() {
+    return accountNonLocked;
+  }
 
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return credentialsNonExpired;
+  }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
-    }
+  @Override
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return List.of(new SimpleGrantedAuthority(role.name()));
+  }
 
 }

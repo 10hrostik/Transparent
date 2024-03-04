@@ -28,16 +28,16 @@ public class DatabaseConfigurer {
     try (Connection connection = DriverManager.getConnection(connectionString, superUser, superPassword)) {
       if (checkIfDatabaseNotExists(connection)) {
         String query = """
-          CREATE DATABASE transparent;
-          REVOKE ALL ON SCHEMA public FROM PUBLIC;
-          REVOKE ALL ON DATABASE transparent FROM PUBLIC;
-          """;
+         CREATE DATABASE transparent;
+         REVOKE ALL ON SCHEMA public FROM PUBLIC;
+         REVOKE ALL ON DATABASE transparent FROM PUBLIC;
+         """;
 
         Statement statement = connection.createStatement();
         statement.execute(query);
       }
     } catch (SQLException e) {
-        log.error(e.toString());
+      log.error(e.toString());
     }
   }
 
@@ -45,17 +45,17 @@ public class DatabaseConfigurer {
     try (Connection connection = DriverManager.getConnection(connectionString + "transparent", superUser, superPassword)) {
       if (checkIfAuthoritiesNotExists(connection)) {
         String query = """
-          CREATE ROLE transparent_super_role;
-          GRANT CONNECT ON DATABASE transparent TO transparent_super_role;
-          GRANT ALL ON DATABASE transparent TO transparent_super_role;
-          CREATE USER flyway_user NOSUPERUSER NOCREATEDB NOCREATEROLE LOGIN ENCRYPTED PASSWORD 'VwJkf4nHIpbl';
-          GRANT ALL ON DATABASE transparent TO flyway_user;
-          GRANT ALL PRIVILEGES ON DATABASE transparent TO flyway_user;
-          CREATE ROLE transparent_service_role;
-          GRANT CONNECT ON DATABASE transparent TO transparent_service_role;
-          CREATE USER transparent_service NOSUPERUSER NOCREATEDB NOCREATEROLE LOGIN ENCRYPTED PASSWORD 'XfExc8ZTbsze';
-          GRANT transparent_service_role TO transparent_service;
-          """;
+         CREATE ROLE transparent_super_role;
+         GRANT CONNECT ON DATABASE transparent TO transparent_super_role;
+         GRANT ALL ON DATABASE transparent TO transparent_super_role;
+         CREATE USER flyway_user NOSUPERUSER NOCREATEDB NOCREATEROLE LOGIN ENCRYPTED PASSWORD 'VwJkf4nHIpbl';
+         GRANT ALL ON DATABASE transparent TO flyway_user;
+         GRANT ALL PRIVILEGES ON DATABASE transparent TO flyway_user;
+         CREATE ROLE transparent_service_role;
+         GRANT CONNECT ON DATABASE transparent TO transparent_service_role;
+         CREATE USER transparent_service NOSUPERUSER NOCREATEDB NOCREATEROLE LOGIN ENCRYPTED PASSWORD 'XfExc8ZTbsze';
+         GRANT transparent_service_role TO transparent_service;
+         """;
 
         Statement statement = connection.createStatement();
         statement.execute(query);

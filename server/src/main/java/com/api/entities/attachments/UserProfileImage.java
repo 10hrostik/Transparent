@@ -11,7 +11,6 @@ import org.springframework.data.relational.core.mapping.Table;
 @NoArgsConstructor
 @Table(name = "user_profile_images")
 public class UserProfileImage extends MediaAttachment {
-
   @Column(value = "main")
   private Boolean main;
 

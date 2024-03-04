@@ -13,21 +13,21 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class UserService extends GeneralUserService {
-    public UserService(UserRepository userRepository, CountryRepository countryRepository,
-                       PasswordEncoder passwordEncoder, UserMapper userMapper) {
-        super(userRepository, countryRepository, passwordEncoder, userMapper);
-    }
+  public UserService(UserRepository userRepository, CountryRepository countryRepository,
+                     PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    super(userRepository, countryRepository, passwordEncoder, userMapper);
+  }
 
-    public Mono<ResponseUserDto> editUserPassword(String credentials, String newPassword) {
-        Mono<User> userMono = findByUsername(credentials).cast(User.class);
-        userMono.flatMap(user -> userRepository
-                .updatePassword(passwordEncoder.encode(newPassword), user.getId())).subscribe();
+  public Mono<ResponseUserDto> editUserPassword(String username, String newPassword) {
+    Mono<User> userMono = findByUsername(username).cast(User.class);
+    userMono.flatMap(user -> userRepository
+     .updatePassword(passwordEncoder.encode(newPassword), user.getId())).subscribe();
 
-        return userMono.map(userMapper::asResponseDto);
-    }
+    return userMono.map(userMapper::asResponseDto);
+  }
 
-    public Mono<ResponseUserDto> editUser(EditUserProfileDto userProfileDto) {
-        return userRepository.findById(userProfileDto.getId())
-            .flatMap(user -> userRepository.save(userMapper.asEditedUser(userProfileDto, user))).map(userMapper::asResponseDto);
-    }
+  public Mono<ResponseUserDto> edit(EditUserProfileDto userProfileDto) {
+    return userRepository.findById(userProfileDto.getId())
+     .flatMap(user -> userRepository.save(userMapper.asEditedUser(userProfileDto, user))).map(userMapper::asResponseDto);
+  }
 }

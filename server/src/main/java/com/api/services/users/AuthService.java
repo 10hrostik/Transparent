@@ -4,10 +4,14 @@ import com.api.controllers.dto.users.EditUserPasswordDto;
 import com.api.controllers.dto.users.RegisterUserDto;
 import com.api.controllers.dto.users.ResponseUserDto;
 import com.api.controllers.mappers.UserMapper;
+import com.api.entities.attachments.UserProfileImage;
 import com.api.entities.users.User;
-import com.api.exceptions.InvalidCredentialException;
+import com.api.exceptions.UserExistsException;
 import com.api.repositories.CountryRepository;
 import com.api.repositories.UserRepository;
+import com.api.services.attachments.MediaAttachmentProvider;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,65 +22,50 @@ import reactor.core.publisher.Mono;
 @Service
 @Transactional
 public class AuthService extends GeneralUserService implements ReactiveUserDetailsService {
-    public AuthService(UserRepository userRepository, CountryRepository countryRepository,
-                       PasswordEncoder passwordEncoder, UserMapper userMapper) {
-        super(userRepository, countryRepository, passwordEncoder, userMapper);
-    }
+  @Autowired
+  private MediaAttachmentProvider<UserProfileImage> attachmentProvider;
 
-    @Override
-    public Mono<UserDetails> findByUsername(String username) {
-        return super.findByUsername(username);
-    }
+  public AuthService(UserRepository userRepository, CountryRepository countryRepository,
+                     PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    super(userRepository, countryRepository, passwordEncoder, userMapper);
+  }
 
-    public Mono<ResponseUserDto> register(RegisterUserDto userDto) {
-        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        return findByUsername(userDto.getCredential() != null ?
-                userDto.getCredential() : userDto.getPhone().toString()).cast(User.class)
-                .flatMap(user -> userRepository.save(userMapper.asRegisteredUser(userDto)))
-                .map(userMapper::asResponseDto);
-    }
+  @Override
+  public Mono<UserDetails> findByUsername(String username) {
+    return super.findByUsername(username);
+  }
 
-    public Mono<ResponseUserDto> getUser(Object credential, String password) throws IllegalArgumentException {
-        Mono<User> user;
-        if (credential instanceof Long) {
-            user = getUserByPhone((Long) credential);
-            user.flatMap(this::updateLoginDate).subscribe();
+  public Mono<?> register(RegisterUserDto userDto) {
+    String credential = StringUtils.firstNonBlank(userDto.getCredential(), userDto.getPhone());
+    userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-            return convertLoginResponse(user);
-        } else if (credential instanceof String) {
-            password = passwordEncoder.encode(password);
-            user = getUserByCredentialAndPassword((String) credential, password);
-            user.flatMap(this::updateLoginDate).subscribe();
+    return findByUsername(credential).cast(User.class)
+     .flatMap(member -> Mono.error(new UserExistsException("User already exists!")))
+     .switchIfEmpty(save(userDto));
+  }
 
-            return convertLoginResponse(user);
-        }
-        throw new InvalidCredentialException("Wrong input, check credentials!");
-    }
+  public Mono<ResponseUserDto> login(String credential, String password) {
+    Mono<User> user;
+    password = passwordEncoder.encode(password);
+    user = userRepository.findByUsernameOrPhoneOrEmailAndPassword(credential, password);
+    user.flatMap(this::updateLoginDate).subscribe();
 
-    public Mono<Boolean> restore(EditUserPasswordDto passwordDto) throws IllegalArgumentException {
-        passwordDto.setNewPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
-        return findByUsername(passwordDto.getCredential()).cast(User.class)
-                .flatMap(user -> {
-                    user.setPassword(passwordDto.getNewPassword());
-                    return userRepository.save(user);
-                })
-                .map(user -> true);
-    }
+    return convertLoginResponse(user);
+  }
 
-    private Mono<ResponseUserDto> convertLoginResponse(Mono<User> user) {
-        return user.flatMap(member -> countryRepository.findById(member.getCountryId())
-                .map(country -> {
-                    member.setCountry(country);
-                    return member;
-                }))
-                .map(userMapper::asResponseDto);
-    }
+  public Mono<Boolean> restore(EditUserPasswordDto userDto) {
+    userDto.setNewPassword(passwordEncoder.encode(userDto.getNewPassword()));
+    return findByUsername(userDto.getCredential()).cast(User.class)
+     .flatMap(user -> userRepository.updatePassword(userDto.getNewPassword(), user.getId()))
+     .map(user -> true);
+  }
 
-    private Mono<User> getUserByPhone(Long phone) {
-        return userRepository.findByPhone(phone);
-    }
-
-    private Mono<User> getUserByCredentialAndPassword(String email, String password) {
-        return userRepository.findByEmailAndPassword(email, password);
-    }
+  private Mono<ResponseUserDto> convertLoginResponse(Mono<User> user) {
+    return user.flatMap(member -> countryRepository.findCountryById(member.getCountryId())
+      .map(country -> userMapper.asUserWithCountry(member, country)))
+     .switchIfEmpty(user)
+     .flatMap(member -> attachmentProvider.getUserMainImage(member.getId())
+      .map(image -> { member.setMainPhoto(image.getBody()); return member; }))
+     .map(userMapper::asResponseDto);
+  }
 }

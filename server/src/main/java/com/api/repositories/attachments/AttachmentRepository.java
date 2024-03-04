@@ -15,5 +15,4 @@ public interface AttachmentRepository<T extends AttachmentEntity> extends R2dbcR
   Flux<T> findAllByCreatedBy(Long userId);
 
   Mono<T> findByIdAndCreatedBy(Long id, Long createdBy);
-
 }

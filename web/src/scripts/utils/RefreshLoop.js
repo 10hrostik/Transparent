@@ -1,5 +1,5 @@
 let refreshLoop = {
-    fun: null
+  fun: null
 };
 
 export default refreshLoop

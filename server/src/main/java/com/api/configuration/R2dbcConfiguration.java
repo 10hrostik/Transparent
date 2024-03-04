@@ -8,8 +8,8 @@ import org.springframework.data.r2dbc.dialect.PostgresDialect;
 @Configuration
 public class R2dbcConfiguration {
 
-    @Bean
-    public R2dbcCustomConversions r2dbcCustomConversions() {
-        return R2dbcCustomConversions.of(PostgresDialect.INSTANCE);
-    }
+  @Bean
+  public R2dbcCustomConversions r2dbcCustomConversions() {
+    return R2dbcCustomConversions.of(PostgresDialect.INSTANCE);
+  }
 }

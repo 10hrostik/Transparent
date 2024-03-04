@@ -11,11 +11,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AttachmentDto {
-    private long id;
+  private long id;
 
-    private String filename;
+  private String filename;
 
-    private AttachmentType attachmentType;
+  private AttachmentType attachmentType;
 
-    private String contentType;
+  private String contentType;
 }

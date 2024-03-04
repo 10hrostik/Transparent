@@ -7,5 +7,5 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface AttachmentUserRepository extends R2dbcRepository<AttachmentUser, Long> {
-    Flux<AttachmentUser> findAttachmentUserByUserId(Long userId);
+  Flux<AttachmentUser> findAttachmentUserByUserId(Long userId);
 }

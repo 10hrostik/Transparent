@@ -21,47 +21,47 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/secured/user")
 public class UserController {
-    private final UserService userService;
 
-    private final JwtConfig jwtUtil;
+  private final UserService userService;
 
-    @PatchMapping(value = "/password", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<ResponseUserDto> editPassword(@RequestBody EditUserPasswordDto dto) {
-        return userService.editUserPassword(dto.getCredential(), dto.getNewPassword());
-    }
+  private final JwtConfig jwtUtil;
 
-    @PatchMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<ResponseEntity<ResponseUserDto>> editProfile(@RequestBody EditUserProfileDto userProfileDto) {
-        return userService.editUser(userProfileDto)
-                .map(user -> {
-                    user.setToken(jwtUtil.generateToken(user));
-                    return ResponseEntity.ok(user);
-                }).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
-    }
+  @PatchMapping(value = "/password", produces = MediaType.APPLICATION_JSON_VALUE)
+  public Mono<ResponseUserDto> editPassword(@RequestBody EditUserPasswordDto dto) {
+    return userService.editUserPassword(dto.getCredential(), dto.getNewPassword());
+  }
 
-    @GetMapping(value = "/logout")
-    public Mono<ResponseEntity<Object>> logout(ServerHttpRequest httpRequest, ServerHttpResponse httpResponse) {
-        try {
-            MultiValueMap<String, HttpCookie> cookies = httpRequest.getCookies();
-            for (Map.Entry<String, List<HttpCookie>> cookie : cookies.entrySet()) {
-                for (HttpCookie cookieToBeDeleted : cookie.getValue()) {
-                    httpResponse.addCookie(ResponseCookie.from(cookieToBeDeleted.getName(), cookieToBeDeleted.getValue())
-                            .maxAge(0).build());
-                }
-            }
+  @PatchMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public Mono<ResponseEntity<ResponseUserDto>> editProfile(@RequestBody EditUserProfileDto userProfileDto) {
+    return userService.edit(userProfileDto)
+     .map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.badRequest().build());
+  }
 
-            return Mono.just(ResponseEntity.status(HttpStatus.OK).build());
-        } catch (Exception e) {
-            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+  @GetMapping(value = "/logout")
+  public Mono<ResponseEntity<Object>> logout(ServerHttpRequest httpRequest, ServerHttpResponse httpResponse) {
+    try {
+      MultiValueMap<String, HttpCookie> cookies = httpRequest.getCookies();
+      for (Map.Entry<String, List<HttpCookie>> cookie : cookies.entrySet()) {
+        for (HttpCookie cookieToBeDeleted : cookie.getValue()) {
+          httpResponse.addCookie(ResponseCookie.from(cookieToBeDeleted.getName(), cookieToBeDeleted.getValue())
+           .maxAge(0).build());
         }
-    }
+      }
 
-    @GetMapping("/refresh/{username}")
-    public Mono<ResponseEntity<String>> refreshToken(@PathVariable String username) {
-        return userService.findByUsername(username).cast(User.class)
-                .map(user -> {
-                    String token = jwtUtil.generateToken(user);
-                    return ResponseEntity.ok(token);
-                }).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+      return Mono.just(ResponseEntity.noContent().build());
+    } catch (Exception e) {
+      return Mono.just(ResponseEntity.internalServerError().build());
     }
+  }
+
+  @GetMapping("/refresh/{username}")
+  public Mono<ResponseEntity<String>> refreshToken(@PathVariable String username) {
+    return userService.findByUsername(username).cast(User.class)
+     .map(this::refresh).defaultIfEmpty(ResponseEntity.badRequest().build());
+  }
+
+  private ResponseEntity<String> refresh(User user) {
+    String token = jwtUtil.generateToken(user);
+    return ResponseEntity.ok(token);
+  }
 }

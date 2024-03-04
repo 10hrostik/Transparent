@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class CountryDto {
-    private String name;
+  private String name;
 
-    private Short phonePreffix;
+  private String phonePreffix;
 }

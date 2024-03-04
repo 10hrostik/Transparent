@@ -21,6 +21,13 @@
 .sideBarImage {
     background-color: transparent;
 }
+.sideBarProfileImage {
+    background-color: transparent;
+    border-radius: 50%;
+    border: 2px solid black;
+    height: 40px !important;
+    width: 40px !important;
+}
 .sideBarImageButton {
     width: 100%;
     text-align: center; 
@@ -31,6 +38,7 @@
 }
 .sideBarImageProfileButton {
     width: 100%;
+    height: 11.66%;
     text-align: center;
     background-color: transparent;
     border: none;

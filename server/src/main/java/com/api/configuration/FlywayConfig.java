@@ -8,20 +8,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties({ R2dbcProperties.class, FlywayProperties.class })
+@EnableConfigurationProperties({R2dbcProperties.class, FlywayProperties.class})
 public class FlywayConfig {
   @Bean(initMethod = "migrate")
   public Flyway flyway(FlywayProperties flywayProperties, R2dbcProperties r2dbcProperties) {
     return Flyway.configure()
-        .dataSource(
-            flywayProperties.getUrl(),
-            flywayProperties.getUser(),
-            flywayProperties.getPassword()
-        )
-        .locations(flywayProperties.getLocations().toArray(String[]::new))
-        .sqlMigrationPrefix(flywayProperties.getSqlMigrationPrefix())
-        .baselineOnMigrate(true)
-        .defaultSchema(flywayProperties.getDefaultSchema())
-        .load();
+     .dataSource(
+      flywayProperties.getUrl(),
+      flywayProperties.getUser(),
+      flywayProperties.getPassword()
+     )
+     .locations(flywayProperties.getLocations().toArray(String[]::new))
+     .sqlMigrationPrefix(flywayProperties.getSqlMigrationPrefix())
+     .baselineOnMigrate(true)
+     .defaultSchema(flywayProperties.getDefaultSchema())
+     .load();
   }
 }

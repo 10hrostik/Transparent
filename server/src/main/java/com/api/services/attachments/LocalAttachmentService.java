@@ -28,79 +28,76 @@ import java.util.Objects;
 @Service
 public abstract class LocalAttachmentService<T extends AttachmentEntity> implements AttachmentProvider<T> {
 
-    @Value("${attachments.dir}")
-    private String attachemntfolderPath;
+  protected final AttachmentMapper attachmentMapper;
 
-    protected final AttachmentMapper attachmentMapper;
+  private final AttachmentUserRepository attachmentUserRepository;
 
-    private final AttachmentUserRepository attachmentUserRepository;
+  @Value("${attachments.dir}")
+  private String attachemntfolderPath;
 
-    @Override
-    public Flux<T> getUserAttachments(Long userId, AttachmentType attachmentType) {
-        return attachmentUserRepository.findAttachmentUserByUserId(userId)
-            .flatMap(attachmentUser -> getRepository()
-                .findAttachmentByIdAndAttachmentType(attachmentUser.getAttachmentId(), attachmentType));
-    }
+  @Override
+  public Flux<T> getUserAttachments(Long userId, AttachmentType attachmentType) {
+    return attachmentUserRepository.findAttachmentUserByUserId(userId).flatMap(attachmentUser -> getRepository()
+      .findAttachmentByIdAndAttachmentType(attachmentUser.getAttachmentId(), attachmentType));
+  }
 
-    @Override
-    public Flux<T> getUserAttachments(Long userId) {
-        return attachmentUserRepository.findAttachmentUserByUserId(userId)
-            .flatMap(attachmentUser -> getRepository().findById(attachmentUser.getAttachmentId()));
-    }
+  @Override
+  public Flux<T> getUserAttachments(Long userId) {
+    return attachmentUserRepository.findAttachmentUserByUserId(userId)
+     .flatMap(attachmentUser -> getRepository().findById(attachmentUser.getAttachmentId()));
+  }
 
-    @Override
-    public Mono<T> getAttachment(Long id) {
-        return getRepository().findById(id);
-    }
+  @Override
+  public Mono<T> getAttachment(Long id) {
+    return getRepository().findById(id);
+  }
 
-    @Override
-    public Mono<T> upload(Mono<FilePart> filePart, Long userId, AttachmentType attachmentType, String dir) {
-        return filePart.flatMap(file -> this.uploadFile(file, userId, attachmentType, dir));
-    }
+  @Override
+  public Mono<T> upload(Mono<FilePart> filePart, Long userId, AttachmentType attachmentType, String dir) {
+    return filePart.flatMap(file -> this.uploadFile(file, userId, attachmentType, dir));
+  }
 
-    @Override
-    public Flux<T> getAttachments() {
-        return null;
-    }
+  @Override
+  public Flux<T> getAttachments() {
+    return null;
+  }
 
-    @Override
-    public Flux<T> upload(Flux<FilePart> fileParts, Long userId, AttachmentType attachmentType, String dir) {
-        return fileParts.flatMap(file -> this.uploadFile(file, userId, attachmentType, dir));
-    }
+  @Override
+  public Flux<T> upload(Flux<FilePart> fileParts, Long userId, AttachmentType attachmentType, String dir) {
+    return fileParts.flatMap(file -> this.uploadFile(file, userId, attachmentType, dir));
+  }
 
-    protected abstract Mono<T> instantiateAttachment(UploadAttachmentDto uploadAttachmentDto);
+  protected abstract Mono<T> instantiateAttachment(UploadAttachmentDto uploadAttachmentDto);
 
-    protected abstract AttachmentRepository<T> getRepository();
+  protected abstract AttachmentRepository<T> getRepository();
 
-    private Mono<T> uploadFile(FilePart file, Long userId, AttachmentType attachmentType, String dir) {
-        String filename = file.filename();
-        String uri = attachemntfolderPath.concat(dir);
-        String contentType = Objects.requireNonNull(file.headers().get(HttpHeaders.CONTENT_TYPE)).getFirst();
-        FileUtils.createFolderIfNotExists(uri);
-        File path = new File(uri, filename);
-        UploadAttachmentDto uploadAttachmentDto = UploadAttachmentDto.builder()
-            .filename(filename)
-            .userId(userId)
-            .attachmentType(attachmentType)
-            .contentType(contentType)
-            .url(uri + filename)
-            .build();
-        return file.transferTo(path)
-            .then(saveTransaction(uploadAttachmentDto));
-    }
+  private Mono<T> uploadFile(FilePart file, Long userId, AttachmentType attachmentType, String dir) {
+    String filename = file.filename();
+    String uri = attachemntfolderPath.concat(dir);
+    String contentType = Objects.requireNonNull(file.headers().get(HttpHeaders.CONTENT_TYPE)).getFirst();
+    FileUtils.createFolderIfNotExists(uri);
+    File path = new File(uri, filename);
+    UploadAttachmentDto uploadAttachmentDto = UploadAttachmentDto.builder()
+     .filename(filename)
+     .userId(userId)
+     .attachmentType(attachmentType)
+     .contentType(contentType)
+     .url(uri + filename)
+     .build();
+    return file.transferTo(path).then(saveTransaction(uploadAttachmentDto));
+  }
 
-    private Mono<T> saveTransaction(UploadAttachmentDto uploadAttachment) {
-      return instantiateAttachment(uploadAttachment).flatMap(this::saveAttachment);
-    }
+  private Mono<T> saveTransaction(UploadAttachmentDto uploadAttachment) {
+    return instantiateAttachment(uploadAttachment).flatMap(this::saveAttachment);
+  }
 
-    private Mono<T> saveAttachment(T attachment) {
-        return getRepository().save(attachment).map(savedAttachment -> savedAttachment instanceof UserProfileImage ? savedAttachment : saveAttachmentUser(savedAttachment));
-    }
+  private Mono<T> saveAttachment(T attachment) {
+    return getRepository().save(attachment).map(savedAttachment -> savedAttachment instanceof UserProfileImage ? savedAttachment : saveAttachmentUser(savedAttachment));
+  }
 
-    private T saveAttachmentUser(T attachment) {
-        AttachmentUser attachmentUser = attachmentMapper.asAttachmentUser(attachment);
-        attachmentUserRepository.save(attachmentUser).delaySubscription(Duration.of(1, ChronoUnit.MILLIS)).subscribe();
-        return attachment;
-    }
-
+  private T saveAttachmentUser(T attachment) {
+    AttachmentUser attachmentUser = attachmentMapper.asAttachmentUser(attachment);
+    attachmentUserRepository.save(attachmentUser).delaySubscription(Duration.of(1, ChronoUnit.MILLIS)).subscribe();
+    return attachment;
+  }
 }

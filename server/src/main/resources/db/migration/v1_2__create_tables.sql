@@ -1,7 +1,7 @@
 create table countries(
     id bigserial primary key,
     name varchar(64) not null,
-    phone_preffix smallint not null
+    phone_preffix varchar(5) not null
 );
 
 create table users(
@@ -11,7 +11,7 @@ create table users(
     email varchar(64),
     name varchar(64),
     surname varchar(64),
-    phone bigint,
+    phone varchar(15),
     register_date date default current_date,
     login_date date,
     account_non_expired boolean not null,

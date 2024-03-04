@@ -12,25 +12,23 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public abstract class AttachmentEntity extends BaseEntity {
+  @Column(value = "filename")
+  private String filename;
 
-    @Column(value = "filename")
-    private String filename;
+  @Column(value = "url")
+  private String url;
 
-    @Column(value = "url")
-    private String url;
+  @Column(value = "content_type")
+  private String contentType;
 
-    @Column(value = "content_type")
-    private String contentType;
+  @Column(value = "attachment_type")
+  private AttachmentType attachmentType;
 
-    @Column(value = "attachment_type")
-    private AttachmentType attachmentType;
+  @Column(value = "created_by")
+  private long createdBy;
 
-    @Column(value = "created_by")
-    private long createdBy;
-
-    @Column(value = "created_on")
-    private LocalDate createdOn;
-
+  @Column(value = "created_on")
+  private LocalDate createdOn;
 }
 
 

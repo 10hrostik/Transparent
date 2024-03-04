@@ -5,7 +5,7 @@ import org.springframework.http.codec.multipart.FilePart;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface AttachmentProvider <T> {
+public interface AttachmentProvider<T> {
   Flux<T> getUserAttachments(Long userId);
 
   Flux<T> getAttachments();
@@ -17,5 +17,4 @@ public interface AttachmentProvider <T> {
   Mono<T> upload(Mono<FilePart> file, Long userId, AttachmentType attachmentType, String dir);
 
   Flux<T> upload(Flux<FilePart> file, Long userId, AttachmentType attachmentType, String dir);
-
 }

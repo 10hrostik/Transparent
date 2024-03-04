@@ -14,12 +14,12 @@ import java.util.List;
 @Table(name = "countries")
 @EqualsAndHashCode(callSuper = true)
 public class Country extends BaseEntity {
-    @Column(value = "name")
-    private String name;
+  @Column(value = "name")
+  private String name;
 
-    @Column(value = "phone_preffix")
-    private Short phonePreffix;
+  @Column(value = "phone_preffix")
+  private String phonePreffix;
 
-    @Transient
-    private List<User> users;
+  @Transient
+  private List<User> users;
 }

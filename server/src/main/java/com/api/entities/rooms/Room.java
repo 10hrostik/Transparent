@@ -10,12 +10,12 @@ import java.time.LocalDate;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public abstract class Room extends BaseEntity {
-    @Column(value = "name")
-    protected String name;
+  @Column(value = "name")
+  protected String name;
 
-    @Column(value = "created_on")
-    protected LocalDate createdOn;
+  @Column(value = "created_on")
+  protected LocalDate createdOn;
 
-    @Column(value = "created_by")
-    protected Long createdBy;
+  @Column(value = "created_by")
+  protected Long createdBy;
 }

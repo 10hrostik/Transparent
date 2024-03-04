@@ -9,9 +9,9 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table(name = "channels")
 @EqualsAndHashCode(callSuper = true)
 public class Channel extends Room {
-    @Column(value = "user_chat_id")
-    private Long userChannelId;
+  @Column(value = "user_chat_id")
+  private Long userChannelId;
 
-    @Column(value = "active")
-    private Boolean active;
+  @Column(value = "active")
+  private Boolean active;
 }

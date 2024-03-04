@@ -5,5 +5,5 @@ import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RoomRepository <T extends Room> extends R2dbcRepository<T, Long> {
+public interface RoomRepository<T extends Room> extends R2dbcRepository<T, Long> {
 }

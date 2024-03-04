@@ -11,23 +11,25 @@ import java.util.Collection;
 @Setter
 @Getter
 public class ResponseUserDto extends InitUserDto {
-    private Long id;
+  private Long id;
 
-    private String email;
+  private String email;
 
-    private String name;
+  private String name;
 
-    private String surname;
+  private String surname;
 
-    private Long phone;
+  private String phone;
 
-    private Date loginDate;
+  private Date loginDate;
 
-    private String description;
+  private String description;
 
-    private CountryDto country;
+  private CountryDto country;
 
-    private String token;
+  private String token;
 
-    private Collection<? extends GrantedAuthority> roles;
+  private byte[] mainPhoto;
+
+  private Collection<? extends GrantedAuthority> roles;
 }
